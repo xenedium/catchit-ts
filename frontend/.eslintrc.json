@@ -1,0 +1,35 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "extends": [
+
+    ],
+    "rules": {
+        "indent": ["error", 4],
+        "semi": "error",
+        "quotes": ["error", "single"],
+        "no-irregular-whitespace": "error",
+        "no-unreachable": "error",
+        "no-unused-vars": "error",
+        "no-use-before-define": "error",
+        "camelcase": "error",
+        "eqeqeq": "error",
+        "no-console": "warn",
+        "no-else-return": "error",
+        "no-empty": "warn",
+        "no-var": "error",
+        "spaced-comment": "warn",
+        "array-bracket-spacing": ["error", "never"],
+        "no-trailing-spaces": "error",
+        "no-whitespace-before-property": "error"
+    },
+    "ignorePatterns": [
+        "dist/",
+        "build/",
+        "node_modules/",
+        "react-app-env.d.ts"
+    ]
+}
