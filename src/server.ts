@@ -2,26 +2,33 @@ import express from 'express';
 require('dotenv').config();
 import morgan from 'morgan';
 import { join } from 'path';
+import { connect } from 'mongoose';
+import { HttpStatusCode } from './Types';
+import router from './router';
 
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGO_URI;
 
 const app = express();
 
-app.use(morgan('dev'));
+const buildPath = process.env.NODE_ENV === 'production' ? join(__dirname, 'public') : join(__dirname, '..', 'dist', 'public');
 
-// Serve static files from the React app
-app.use(express.static(join(__dirname, 'public')));
-app.get('/', (req, res) => res.sendFile(join(__dirname, 'public', 'index.html')));
+// Logger
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+// JSON body parser
+app.use(express.json());
 
 
-app.use('/api/test', (req, res) => {
-    res.status(200).json({
-        code: 200,
-        message: 'ok',
-        error: null
-    });
-});
+// API Routes
+app.use('/api', router);
+// Static files & React build
+app.use(express.static(buildPath));
+// Regex for React routes
+app.get(/\/(login|register|account|my-articles|article(s?)|my-favorites|add-article|edit-article)/g, (req, res) => res.sendFile(join(buildPath, 'index.html')));
+// 404 route for API routes
+app.use('/api/*', (_, res) => res.status(HttpStatusCode.NOT_FOUND).json({status: HttpStatusCode.NOT_FOUND, message: 'Not found'}));
+// 404 route for all other routes
+app.get('*', (_, res) => res.status(HttpStatusCode.NOT_FOUND).sendFile(join(buildPath, 'index.html')));
 
-app.listen(PORT, () => {
-    console.log(`Server started at http://localhost:${PORT}`);
-});
+
+connect(MONGO_URI).then(() => app.listen(PORT));

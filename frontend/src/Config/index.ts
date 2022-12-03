@@ -1,2 +1,2 @@
-const PublicUrl: string = 'https://catchit.herokuapp.com';
+const PublicUrl: string = '';
 export default PublicUrl;

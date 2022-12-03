@@ -84,7 +84,7 @@ export const Layout = ({ children }: Props) => {
                 setHeaderData({
                     user: {
                         name: res.payload.firstname,
-                        image: res.payload.image ? `https://catchit.fra1.digitaloceanspaces.com${res.payload.image}` : 'https://catchit.fra1.digitaloceanspaces.com/assets/not_signed_in.png'
+                        image: ''
                     }
                 });
                 setLoading(false);

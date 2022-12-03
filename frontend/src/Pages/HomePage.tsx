@@ -83,7 +83,7 @@ export function HeroBullets() {
                 <div className={classes.inner}>
                     <div className={classes.content}>
                         <Title className={classes.title}>
-                            A <span className={classes.highlight}>Django</span> & React <br /> School Project
+                            A <span className={classes.highlight}>Express</span> & React <br /> School Project
                         </Title>
                         <Text color="dimmed" mt="md">
                             An open source Express React school project.
@@ -139,7 +139,7 @@ export function HeroBullets() {
                                 View Articles
                             </Button>
 
-                            <Button<'a'> component="a" href="https://github.com/xenedium/catchit" variant="default" radius="xl" size="md" className={classes.control}>
+                            <Button<'a'> component="a" href="https://github.com/xenedium/catchit-ts" variant="default" radius="xl" size="md" className={classes.control}>
                                 Source code
                             </Button>
 
