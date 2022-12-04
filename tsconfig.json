@@ -4,7 +4,10 @@
         "outDir": "dist",
         "rootDir": "src",
         "strict": false,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "typeRoots": [
+            "node_modules/@types",
+        ],
     },
     "include": [
         "src/**/*"

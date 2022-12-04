@@ -1,3 +1,5 @@
+import { UserDto } from './';
+
 export type ServerJsonResponse = {
     statusCode: number;
     message: string;
@@ -11,4 +13,6 @@ export type ServerJsonResponse = {
     nextPage?: number | null;
     hasPrevPage?: boolean;
     hasNextPage?: boolean;
+    user?: UserDto;
+    token?: string;
 };

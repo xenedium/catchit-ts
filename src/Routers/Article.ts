@@ -3,6 +3,6 @@ import { ArticleControllers } from '../Controllers';
 
 const articleRouter = Router();
 
-articleRouter.get('/article/test', ArticleControllers.test);
+articleRouter.get('/', ArticleControllers.test);
 
 export default articleRouter;

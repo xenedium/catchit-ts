@@ -1,11 +1,10 @@
 import type { Request, Response } from 'express';
 
 
-const register = async (req: Request, res: Response) => {
-    console.log(req.body);
+const test = async (req: Request, res: Response) => {
     res.send('Hello');
 };
 
 export default {
-    register,
+    test,
 };

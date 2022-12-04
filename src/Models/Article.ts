@@ -1,20 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { City } from '../Types';
-
-interface IArticle {
-    title: string;
-    image: string;
-    description: string;
-    category: string;
-    seller: string;
-    condition: string;
-    price: number;
-    createdAt: Date;
-    updatedAt: Date;
-    quantity: number;
-    isSold: boolean;
-    city: City;
-}
+import { City } from '../@types';
+import { IArticle } from './Interfaces';
 
 const ArticleSchema = new Schema<IArticle>({
     title: {

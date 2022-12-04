@@ -1,18 +1,6 @@
 import { Schema, model } from 'mongoose';
-
-interface IUser {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    salt: string;
-    password: string;
-    createdAt: Date;
-    isAdmin: boolean;
-    isSuperUser: boolean;
-    isBanned: boolean;
-    image: string;
-}
+import { City } from '../@types';
+import { IUser } from './Interfaces';
 
 const UserSchema = new Schema<IUser>({
     firstName: {
@@ -41,13 +29,18 @@ const UserSchema = new Schema<IUser>({
         unique: true,
         match: /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/,
     },
+    city: {
+        type: String,
+        required: true,
+        enum: Object.values(City),
+    },
     salt: {
         type: String,
         required: true,
         minlength: 32,
         maxlength: 32,
     },
-    password: {
+    hash: {
         type: String,
         required: true,
         minlength: 128,
@@ -58,14 +51,6 @@ const UserSchema = new Schema<IUser>({
         default: Date.now,
     },
     isAdmin: {
-        type: Boolean,
-        default: false,
-    },
-    isSuperUser: {
-        type: Boolean,
-        default: false,
-    },
-    isBanned: {
         type: Boolean,
         default: false,
     },
