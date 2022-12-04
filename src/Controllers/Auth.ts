@@ -3,7 +3,7 @@ import { User } from '../Models';
 import { HttpStatusCode, type ServerJsonResponse } from '../@types';
 import { randomBytes, pbkdf2Sync } from 'crypto';
 import { sign } from 'jsonwebtoken';
-import { UserHelper } from '../@types/Helpers';
+import { S3LocationHelper, UserHelper } from '../@types/Helpers';
 
 const Register = async (req: Request, res: Response) => {
     const { firstName, lastName, email, phoneNumber, password, city } = req.body;
@@ -28,7 +28,7 @@ const Register = async (req: Request, res: Response) => {
         salt,
         hash,
         city,
-        image: image?.location
+        image: S3LocationHelper(image),
     });
 
 
