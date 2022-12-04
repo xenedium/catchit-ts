@@ -5,9 +5,13 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc && cd frontend && yarn && yarn build && cp -r build ../dist/public",
+    "build:client": "cd frontend && yarn build && mkdir -p ../dist && cp -r build ../dist/public",
+    "build:server": "tsc",
+    "build": "yarn build:client && yarn build:server",
     "serve": "NODE_ENV=production node dist/server.js",
-    "lint": "eslint --ext .ts,.tsx ."
+    "lint:client": "eslint --ext .ts,.tsx frontend",
+    "lint:server": "eslint --ext .ts src",
+    "lint": "yarn lint:client && yarn lint:server"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
