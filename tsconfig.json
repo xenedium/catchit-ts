@@ -11,5 +11,9 @@
     },
     "include": [
         "src/**/*"
+    ],
+    // For overriding Express types
+    "files": [
+        "src/@types/custom.d.ts"
     ]
 }

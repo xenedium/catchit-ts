@@ -95,21 +95,23 @@ const Login = async (req: Request, res: Response) => {
         } as ServerJsonResponse);
     }
     catch (err) {
-        if (err.message === 'Email or password is incorrect') return res.status(HttpStatusCode.UNAUTHORIZED).json({
-            statusCode: HttpStatusCode.UNAUTHORIZED,
-            message: 'Unauthorized',
-            errors: ['Email or password is incorrect'],
-        } as ServerJsonResponse);
-        if (err.message === 'Invalid email or password') return res.status(HttpStatusCode.BAD_REQUEST).json({
-            statusCode: HttpStatusCode.BAD_REQUEST,
-            message: 'Validation failed',
-            errors: ['Invalid email or password'],
-        } as ServerJsonResponse);
-        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-            statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-            message: 'Internal server error',
-            errors: ['Couldn\'t find user'],
-        } as ServerJsonResponse);
+        return err.message === 'Email or password is incorrect' ?
+            res.status(HttpStatusCode.UNAUTHORIZED).json({
+                statusCode: HttpStatusCode.UNAUTHORIZED,
+                message: 'Unauthorized',
+                errors: ['Email or password is incorrect'],
+            } as ServerJsonResponse) :
+            err.message === 'Invalid email or password' ?
+                res.status(HttpStatusCode.BAD_REQUEST).json({
+                    statusCode: HttpStatusCode.BAD_REQUEST,
+                    message: 'Validation failed',
+                    errors: ['Invalid email or password'],
+                } as ServerJsonResponse) :
+                res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+                    statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+                    message: 'Internal server error',
+                    errors: ['Couldn\'t find user'],
+                } as ServerJsonResponse);
     }
 };
 
