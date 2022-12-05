@@ -56,7 +56,7 @@ const UserSchema = new Schema<IUser>({
     },
     image: {
         type: String,
-        default: null,
+        default: process.env.DEFAULT_USER_IMAGE,
     },
 });
 

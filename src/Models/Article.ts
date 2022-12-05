@@ -9,9 +9,9 @@ const ArticleSchema = new Schema<IArticle>({
         minlength: 2,
         maxlength: 50,
     },
-    image: {
-        type: String,
-        default: '',
+    images: {
+        type: [String],
+        default: [process.env.DEFAULT_ARTICLE_IMAGE],
     },
     description: {
         type: String,

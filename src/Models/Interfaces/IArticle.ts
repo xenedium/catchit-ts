@@ -2,7 +2,7 @@ import { City } from '../../@types';
 
 export interface IArticle {
     title: string;
-    image: string;
+    images: string[];
     description: string;
     category: string;
     seller: string;

@@ -75,32 +75,42 @@ const Register = async (req: Request, res: Response) => {
 
 const Login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+    try {
+        if (typeof email !== 'string' || typeof password !== 'string') throw new Error('Invalid email or password');
+        const user = await User.findOne({ email });
+        if (!user) throw new Error('Email or password is incorrect');
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(HttpStatusCode.UNAUTHORIZED).json({
-        statusCode: HttpStatusCode.UNAUTHORIZED,
-        message: 'Unauthorized',
-        errors: ['Email or password is incorrect'],
-    } as ServerJsonResponse);
+        const hash = pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
+        if (hash !== user.hash) throw new Error('Email or password is incorrect');
 
-    const hash = pbkdf2Sync(password, user.salt, 1000, 64, 'sha512').toString('hex');
-    if (hash !== user.hash) return res.status(HttpStatusCode.UNAUTHORIZED).json({
-        statusCode: HttpStatusCode.UNAUTHORIZED,
-        message: 'Unauthorized',
-        errors: ['Email or password is incorrect'],
-    } as ServerJsonResponse);
+        const token = sign({ id: user._id }, process.env.JWT_SECRET, {
+            expiresIn: '1d',
+        });
 
-    const token = sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: '1d',
-    });
-
-    return res.status(HttpStatusCode.OK).json({
-        statusCode: HttpStatusCode.OK,
-        message: 'User logged in',
-        user: UserHelper(user),
-        token,
-    } as ServerJsonResponse);
-
+        return res.status(HttpStatusCode.OK).json({
+            statusCode: HttpStatusCode.OK,
+            message: 'User logged in',
+            user: UserHelper(user),
+            token,
+        } as ServerJsonResponse);
+    }
+    catch (err) {
+        if (err.message === 'Email or password is incorrect') return res.status(HttpStatusCode.UNAUTHORIZED).json({
+            statusCode: HttpStatusCode.UNAUTHORIZED,
+            message: 'Unauthorized',
+            errors: ['Email or password is incorrect'],
+        } as ServerJsonResponse);
+        if (err.message === 'Invalid email or password') return res.status(HttpStatusCode.BAD_REQUEST).json({
+            statusCode: HttpStatusCode.BAD_REQUEST,
+            message: 'Validation failed',
+            errors: ['Invalid email or password'],
+        } as ServerJsonResponse);
+        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+            statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
+            message: 'Internal server error',
+            errors: ['Couldn\'t find user'],
+        } as ServerJsonResponse);
+    }
 };
 
 export default {

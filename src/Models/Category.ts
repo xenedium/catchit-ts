@@ -10,7 +10,7 @@ const CategorySchema = new Schema<ICategory>({
     },
     image: {
         type: String,
-        default: '',
+        default: process.env.DEFAULT_CATEGORY_IMAGE,
     },
     createdAt: {
         type: Date,
