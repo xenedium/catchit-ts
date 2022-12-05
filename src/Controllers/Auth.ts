@@ -13,7 +13,7 @@ const Register = async (req: Request, res: Response) => {
         return res.status(HttpStatusCode.BAD_REQUEST).json({
             statusCode: HttpStatusCode.BAD_REQUEST,
             message: 'Validation failed',
-            errors: ['Password must be at least 8 characters long'],
+            errors: ['Path `password` is shorter than the minimum allowed length (8).'],
         } as ServerJsonResponse);
     }
 
@@ -30,7 +30,6 @@ const Register = async (req: Request, res: Response) => {
         city,
         image: S3LocationHelper(image),
     });
-
 
     try {
         await user.validate();
