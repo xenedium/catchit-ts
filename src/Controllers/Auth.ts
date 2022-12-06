@@ -65,12 +65,16 @@ const Register = async (req: Request, res: Response) => {
         expiresIn: '1d',
     });
 
-    return res.status(HttpStatusCode.CREATED).json({
-        statusCode: HttpStatusCode.CREATED,
-        message: 'User created',
-        user: UserHelper(user),
-        token,
-    } as ServerJsonResponse);
+    return res.status(HttpStatusCode.CREATED)
+        .cookie('catchit-token', token, {
+            maxAge: 1000 * 60 * 60 * 24,    // 1 day
+        })
+        .json({
+            statusCode: HttpStatusCode.CREATED,
+            message: 'User created',
+            user: UserHelper(user),
+            token,
+        } as ServerJsonResponse);
 };
 
 const Login = async (req: Request, res: Response) => {
@@ -87,12 +91,16 @@ const Login = async (req: Request, res: Response) => {
             expiresIn: '1d',
         });
 
-        return res.status(HttpStatusCode.OK).json({
-            statusCode: HttpStatusCode.OK,
-            message: 'User logged in',
-            user: UserHelper(user),
-            token,
-        } as ServerJsonResponse);
+        return res.status(HttpStatusCode.OK)
+            .cookie('catchit-token', token, {
+                maxAge: 1000 * 60 * 60 * 24,    // 1 day
+            })
+            .json({
+                statusCode: HttpStatusCode.OK,
+                message: 'User logged in',
+                user: UserHelper(user),
+                token,
+            } as ServerJsonResponse);
     }
     catch (err) {
         return err.message === 'Email or password is incorrect' ?
@@ -115,7 +123,18 @@ const Login = async (req: Request, res: Response) => {
     }
 };
 
+const Logout = async (req: Request, res: Response) => {
+    return res.status(HttpStatusCode.OK)
+        .clearCookie('catchit-token')
+        .json({
+            statusCode: HttpStatusCode.OK,
+            message: 'User logged out',
+        } as ServerJsonResponse);
+};
+
+
 export default {
     Register,
-    Login
+    Login,
+    Logout,
 };

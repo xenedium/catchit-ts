@@ -1,10 +1,11 @@
 require('dotenv').config();
 import express from 'express';
 import morgan from 'morgan';
+import router from './router';
+import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { connect } from 'mongoose';
 import { HttpStatusCode } from './@types';
-import router from './router';
 import { NotFoundHelper } from './@types/Helpers';
 
 // verify that the required environment variables are set
@@ -28,6 +29,8 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 // Middleware: application/x-www-form-urlencoded parser
 app.use(express.urlencoded({ extended: true }));
+// Middleware: cookie parser
+app.use(cookieParser());
 
 // API Routes
 app.use('/api', router);

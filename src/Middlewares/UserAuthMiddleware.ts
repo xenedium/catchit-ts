@@ -3,11 +3,12 @@ import type { Request, Response, NextFunction } from 'express';
 import { type JwtPayload, verify } from 'jsonwebtoken';
 import { User } from '../Models';
 import { HttpStatusCode, type ServerJsonResponse } from '../@types';
+import { JwtExtractorHelper } from '../@types/Helpers';
 
 export const UserAuthMiddleware = (isAdminRequired = false) => async (req: Request, res: Response, next: NextFunction) => {
 
     try {
-        const token = req.headers['Authorization'] as string || req.headers['authorization'] as string;
+        const token = JwtExtractorHelper(req);
         if (!token) throw new Error('Unauthorized');
         const userId = (verify(token, process.env.JWT_SECRET) as JwtPayload).id;
         const user = await User.findById(userId) as IUser;
