@@ -19,7 +19,7 @@ export function FullLoader() {
             <Container style={ContainerStyle}>
                 <MetroSpinner size={100} color="#000" />
             </Container>
-            <Overlay opacity={0.6} color="black" />
+            <Overlay opacity={0.9} color="black" />
         </>
     );
 }

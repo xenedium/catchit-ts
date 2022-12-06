@@ -3,7 +3,6 @@ import { Layout } from '../Components/Others/Layout';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog, Modal, Text } from '@mantine/core';
 import { Edit, Plus } from 'tabler-icons-react';
-import PublicUrl from '../Config';
 
 
 const useStyles = createStyles((theme) => ({
@@ -51,7 +50,7 @@ export default function EditArticle() {
 
         if (!token) navigate('/login');
 
-        fetch(`${PublicUrl}/api/validate-jwt`, {
+        fetch('/api/validate-jwt', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -63,7 +62,7 @@ export default function EditArticle() {
                     navigate('/login');
                 }
                 else {
-                    fetch(`${PublicUrl}/api/articles/?id=${articleId}`)
+                    fetch(`/api/articles/?id=${articleId}`)
                         .then(res => res.json())
                         .then(articleRes => {
                             if (articleRes.status !== 200 || articleRes.data[0].seller !== userRes.payload.id) {
@@ -72,7 +71,7 @@ export default function EditArticle() {
                                     navigate(-1);
                                 }, 2000);
                             }
-                            fetch(`${PublicUrl}/api/categories/`)
+                            fetch('/api/categories/')
                                 .then(res => res.json())
                                 .then(categoriesRes => {
                                     setCategories(categoriesRes);
@@ -104,7 +103,7 @@ export default function EditArticle() {
         formData.append('quantity', quantity as unknown as string);
         formData.append('city', city);
 
-        fetch(`${PublicUrl}/api/articles/`, {
+        fetch('/api/articles/', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')?.split(' ')[1]}`

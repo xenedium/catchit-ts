@@ -1,39 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { HttpStatusCode, ServerJsonResponse } from '../@types';
-import PublicUrl from '../Config';
+import { HttpStatusCode, type ServerJsonResponse } from '../@types';
+import axios from 'axios';
+import { useFetchUserData } from './useFetchUserData';
 
 export const useLogin = () => {
     const navigate = useNavigate();
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const { userData, loading } = useFetchUserData();
 
-    const HandleLogin = () => {
-        fetch(`${PublicUrl}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        })
-            .then(res => res.json())
-            .then((res: ServerJsonResponse) => {
-                if (res.statusCode === HttpStatusCode.OK) {
-                    navigate(-1);
-                }
-                setErrorMessages(res.errors || []);
-            });
+    const HandleLogin = async () => {
+        const { data } = await axios.post<ServerJsonResponse>('/api/auth/login',
+            { email, password },
+            { validateStatus: () => true, withCredentials: true }
+        );
+        if (data.statusCode === HttpStatusCode.OK) navigate(-1);
+        else {
+            setErrorMessages(data.errors ?? []);
+            setTimeout(() => setErrorMessages([]), 3000);
+        }
     };
 
     useEffect(() => {
-        if (localStorage.getItem('token')) {
-            navigate('/');
-        }
-    }, [navigate]);
+        if (userData) navigate(-1);
+    }, [navigate, loading]);
 
     return {
         errorMessages,
@@ -42,6 +34,7 @@ export const useLogin = () => {
         setEmail,
         setPassword,
         HandleLogin,
-        navigate
+        navigate,
+        loading
     };
 };

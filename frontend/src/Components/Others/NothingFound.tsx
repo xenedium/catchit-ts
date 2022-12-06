@@ -1,6 +1,6 @@
-import React from 'react';
 import { Container, createStyles, Title, Group, Button } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import { NothingFoundType } from '../../@types/props';
 
 const useStyles = createStyles((theme) => ({
     title: {
@@ -15,15 +15,6 @@ const useStyles = createStyles((theme) => ({
         },
     }
 }));
-
-export enum NothingFoundType {
-    // eslint-disable-next-line no-unused-vars
-    NotFound,
-    // eslint-disable-next-line no-unused-vars
-    NoArticles,
-    // eslint-disable-next-line no-unused-vars
-    NoFavorites,
-}
 
 export function NothingFound({ type }: { type: NothingFoundType }) {
     const { classes } = useStyles();

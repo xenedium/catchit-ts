@@ -31,11 +31,11 @@ app.use(express.json());
 // Middleware: application/x-www-form-urlencoded parser
 app.use(express.urlencoded({ extended: true }));
 // Middleware: cookie parser
-app.use(cookieParser());
+app.use(cookieParser(process.env.JWT_SECRET));
 // Middleware: CORS
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' ? 'https://catchit.shop' : '*',
-    credentials: true,
+    origin: '*',
+    credentials: true
 }));
 
 // API Routes

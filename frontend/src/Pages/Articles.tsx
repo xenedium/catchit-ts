@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Layout } from '../Components/Others/Layout';
 import { createStyles, TextInput, ActionIcon, Select, Container, Grid } from '@mantine/core';
 import { Search, ArrowRight } from 'tabler-icons-react';
-import PublicUrl from '../Config';
 import { useNavigate } from 'react-router-dom';
 import { ArticleCard } from '../Components/Others/Card';
 import { FullLoader } from '../Components/Others/FullLoader';
@@ -58,12 +57,12 @@ export default function Articles() {
 
 
     useEffect(() => {
-        fetch(`${PublicUrl}/api/categories/`)
+        fetch('/api/categories/')
             .then(res => res.json())
             .then(res => {
                 setCategories(res);
             });
-        fetch(`${PublicUrl}/api/articles/?city=Casablanca`)
+        fetch('/api/articles/?city=Casablanca')
             .then(res => res.json())
             .then(res => {
                 if (res.status !== 200) {
@@ -79,7 +78,7 @@ export default function Articles() {
 
     const HandleSearchByName = () => {
         setIsLoading(true);
-        fetch(`${PublicUrl}/api/articles/?title=${search}`)
+        fetch(`/api/articles/?title=${search}`)
             .then(res => res.json())
             .then(res => {
                 setCategory(0);
@@ -96,7 +95,7 @@ export default function Articles() {
 
     const HandleSearchByCity = (city: string) => {
         setIsLoading(true);
-        fetch(`${PublicUrl}/api/articles/?city=${city}`)
+        fetch(`/api/articles/?city=${city}`)
             .then(res => res.json())
             .then(res => {
                 setSearch('');
@@ -113,7 +112,7 @@ export default function Articles() {
 
     const HandleSearchByCategory = (category: number) => {
         setIsLoading(true);
-        fetch(`${PublicUrl}/api/articles/?category_id=${category}`)
+        fetch(`/api/articles/?category_id=${category}`)
             .then(res => res.json())
             .then(res => {
                 setSearch('');

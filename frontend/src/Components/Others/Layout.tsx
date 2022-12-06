@@ -1,56 +1,16 @@
 import React, { useEffect, useState } from 'react';
+import { HeaderTabsProps, LayoutProps } from '../../@types/props';
+import { footerLinks } from '../../Constants';
 import {
     HeaderTabsColored,
-    FooterLinks,
+    FooterCentered,
 } from '../Home';
 
 import { FullLoader } from './FullLoader';
-import PublicUrl from '../../Config';
-
-interface HeaderTabsProps {
-    user: { name: string; image: string };
-}
-
-interface FooterLinksProps {
-    data: {
-        title: string;
-        links: { label: string; link: string }[];
-    }[];
-}
-
-type Props = {
-    children: React.ReactNode;
-};
 
 
-const footerLinks: FooterLinksProps = {
-    data: [
-        {
-            'title': 'Community',
-            'links': [
-                {
-                    'label': 'Join Discord',
-                    'link': '#'
-                },
-                {
-                    'label': 'Follow on Twitter',
-                    'link': '#'
-                },
-                {
-                    'label': 'Email newsletter',
-                    'link': '#'
-                },
-                {
-                    'label': 'GitHub discussions',
-                    'link': '#'
-                }
-            ]
-        }
-    ]
-};
 
-
-export const Layout = ({ children }: Props) => {
+export const Layout = ({ children }: LayoutProps) => {
 
     const [loading, setLoading] = useState(true);
 
@@ -69,7 +29,7 @@ export const Layout = ({ children }: Props) => {
             return;
         }
 
-        fetch(`${PublicUrl}/api/validate-jwt`, {
+        fetch('/api/validate-jwt', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -98,9 +58,9 @@ export const Layout = ({ children }: Props) => {
         <>
             <HeaderTabsColored user={headerData.user} />
             <main>
-                { !loading ? children : <FullLoader /> }
+                {!loading ? children : <FullLoader />}
             </main>
-            <FooterLinks data={footerLinks.data} />
+            <FooterCentered links={footerLinks.links} />
         </>
     );
 };

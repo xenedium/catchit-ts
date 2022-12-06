@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Layout } from '../Components/Others/Layout';
 import { useNavigate } from 'react-router-dom';
-import PublicUrl from '../Config';
 import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog } from '@mantine/core';
 import { Edit, Plus } from 'tabler-icons-react';
 
@@ -53,7 +52,7 @@ export default function AddArticle() {
 
         if (!token) navigate('/login');
 
-        fetch(`${PublicUrl}/api/validate-jwt`, {
+        fetch('/api/validate-jwt', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -65,7 +64,7 @@ export default function AddArticle() {
                     navigate('/login');
                 }
                 else {
-                    fetch(`${PublicUrl}/api/categories/`)
+                    fetch('/api/categories/')
                         .then(res => res.json())
                         .then(res => {
                             setCategories(res);
@@ -87,7 +86,7 @@ export default function AddArticle() {
         formData.append('quantity', quantity as unknown as string);
         formData.append('city', city);
 
-        fetch(`${PublicUrl}/api/articles/`, {
+        fetch('/api/articles/', {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')?.split(' ')[1]}`

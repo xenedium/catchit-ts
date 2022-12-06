@@ -1,3 +1,2 @@
-export { FooterLinks } from './HomeFooter';
+export { FooterCentered } from './HomeFooter';
 export { HeaderTabsColored } from './HomeHeader';
-export { LeadGrid } from './HomeGrid';

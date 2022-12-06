@@ -27,9 +27,11 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "axios": "^1.2.1",
     "bootstrap": "^5.2.3",
     "dayjs": "^1.11.6",
     "embla-carousel-react": "^7.0.5",
+    "js-cookie": "^3.0.1",
     "jwt-decode": "^3.1.2",
     "node-sass": "^8.0.0",
     "react": "^18.2.0",
@@ -43,7 +45,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=4000 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -67,8 +69,10 @@
     ]
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.29.0"
-  }
+  },
+  "proxy": "http://localhost:3000"
 }

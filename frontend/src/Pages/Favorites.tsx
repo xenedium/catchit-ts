@@ -3,9 +3,9 @@ import { useLocalStorage } from '@mantine/hooks';
 import { Layout } from '../Components/Others/Layout';
 import { FullLoader } from '../Components/Others/FullLoader';
 import { ArticleCard } from '../Components/Others/Card';
-import { NothingFound, NothingFoundType } from '../Components/Others/NothingFound';
-import PublicUrl from '../Config';
 import { Container, Grid, Title } from '@mantine/core';
+import { NothingFoundType } from '../@types/props';
+import { NothingFound } from '../Components/Others/NothingFound';
 
 
 // “We’re all living in each other’s paranoia.”
@@ -38,7 +38,7 @@ export default function Favorites() {
     useEffect(() => {
         Promise.all(
             favorites.map(id =>
-                fetch(`${PublicUrl}/api/articles/?id=${id}`)
+                fetch(`/api/articles/?id=${id}`)
                     .then(res => res.json())))
             .then(res => {
                 setArticles(res.filter(article =>

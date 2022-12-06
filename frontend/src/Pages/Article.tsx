@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Layout } from '../Components/Others/Layout';
 import { FullLoader } from '../Components/Others/FullLoader';
-import { NothingFound, NothingFoundType } from '../Components/Others/NothingFound';
-import PublicUrl from '../Config';
 import decode from 'jwt-decode';
 import { Container, Image, Title, createStyles, Text, Badge, Button, Modal, Dialog } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { Check, Heart, Pencil, UserCircle } from 'tabler-icons-react';
+import { NothingFoundType } from '../@types/props';
+import { NothingFound } from '../Components/Others/NothingFound';
 
 // "A future is not given to you. It is something you must take for yourself."
 // POD 042 @ Ending E.
@@ -66,7 +66,7 @@ export default function ArticlePage() {
     const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
     const HandleMarkAsSold = () => {
-        fetch(`${PublicUrl}/api/articles/`, {
+        fetch('/api/articles/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export default function ArticlePage() {
 
     const HandleBuy = () => {
         if (!seller) {
-            fetch(`${PublicUrl}/api/users/?id=${article?.seller}`)
+            fetch(`/api/users/?id=${article?.seller}`)
                 .then(res => res.json())
                 .then(res => setSeller(res.data[0]));
         }
@@ -100,7 +100,7 @@ export default function ArticlePage() {
     };
 
     useEffect(() => {
-        fetch(`${PublicUrl}/api/articles/?id=${searchParams.get('id')}`, {
+        fetch(`/api/articles/?id=${searchParams.get('id')}`, {
             headers: {
                 'Authorization': `${localStorage.getItem('token')}`
             }

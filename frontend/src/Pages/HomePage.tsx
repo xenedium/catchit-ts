@@ -1,7 +1,4 @@
-import React, { useEffect } from 'react';
-import PublicUrl from '../Config';
 import { Layout } from '../Components/Others/Layout';
-
 import {
     createStyles,
     Image,
@@ -75,10 +72,10 @@ const useStyles = createStyles((theme) => ({
 }));
 
 
-export function HeroBullets() {
+export default function HomePage() {
     const { classes } = useStyles();
     return (
-        <div>
+        <Layout>
             <Container>
                 <div className={classes.inner}>
                     <div className={classes.content}>
@@ -148,51 +145,7 @@ export function HeroBullets() {
                     <Image src={'https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg'} className={classes.image} />
                 </div>
             </Container>
-        </div>
-    );
-}
-
-export default function HomePage() {
-    useEffect(() => {
-        const visitor = {
-            date: new Date().toString(),
-            page: window.location.pathname,
-            referrer: document.referrer,
-            history: window.history.length,
-            navigator: {
-                cookieEnabled: navigator.cookieEnabled,
-                userAgent: navigator.userAgent,
-                vendor: navigator.vendor,
-            },
-            screen: {
-                width: window.screen.width,
-                height: window.screen.height,
-                innerHeight: window.innerHeight,
-                innerWidth: window.innerWidth,
-                availWidth: window.screen.availWidth,
-                availHeight: window.screen.availHeight,
-                colorDepth: window.screen.colorDepth,
-                pixelDepth: window.screen.pixelDepth,
-            }
-        };
-        const ClientLog = async () => {
-            fetch(`${PublicUrl}/api/log`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(visitor),
-            });
-        };
-        ClientLog();
-    }, []);
-    return (
-        <>
-            <Layout>
-                <HeroBullets />
-            </Layout>
-        </>
-
+        </Layout>
     );
 }
 

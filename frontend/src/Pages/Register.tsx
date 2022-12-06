@@ -14,7 +14,6 @@ import {
 } from '@mantine/core';
 
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
-import PublicUrl from '../Config';
 import { useNavigate } from 'react-router-dom';
 import { MagicSpinner } from 'react-spinners-kit';
 
@@ -41,7 +40,7 @@ export default function Register() {
     const [errors, setErrors] = useState<Errors>({ active: false, message: '' });
 
     const HandleRegister = () => {
-        fetch(`${PublicUrl}/api/users/`, {
+        fetch('/api/users/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -59,7 +58,7 @@ export default function Register() {
             .then(res => {
                 if (res.status === 201) // created successfully now login
                 {
-                    fetch(`${PublicUrl}/api/auth-login`, {
+                    fetch('/api/auth-login', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
