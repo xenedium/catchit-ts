@@ -4,6 +4,6 @@ import { UserAuthMiddleware } from '../Middlewares/UserAuthMiddleware';
 
 const userRouter = Router();
 
-userRouter.get('/me', UserAuthMiddleware(false) , UserControllers.UserMe);
+userRouter.get('/me', UserAuthMiddleware(false) , UserControllers.Me);
 
 export default userRouter;

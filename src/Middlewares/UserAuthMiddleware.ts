@@ -6,7 +6,6 @@ import { HttpStatusCode, type ServerJsonResponse } from '../@types';
 import { JwtExtractorHelper } from '../@types/Helpers';
 
 export const UserAuthMiddleware = (isAdminRequired = false) => async (req: Request, res: Response, next: NextFunction) => {
-
     try {
         const token = JwtExtractorHelper(req);
         if (!token) throw new Error('Unauthorized');
@@ -22,13 +21,13 @@ export const UserAuthMiddleware = (isAdminRequired = false) => async (req: Reque
             res.status(HttpStatusCode.UNAUTHORIZED).json({
                 statusCode: HttpStatusCode.UNAUTHORIZED,
                 message: 'Unauthorized',
-                errors: ['Unauthorized'],
+                errors: ['You must be logged in to access this resource'],
             } as ServerJsonResponse) :
             err.message === 'Forbidden' ?
                 res.status(HttpStatusCode.FORBIDDEN).json({
                     statusCode: HttpStatusCode.FORBIDDEN,
                     message: 'Forbidden',
-                    errors: ['Forbidden'],
+                    errors: ['You don\'t have permission to access this resource'],
                 } as ServerJsonResponse) :
                 res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
                     statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,

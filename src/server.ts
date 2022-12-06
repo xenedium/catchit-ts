@@ -3,6 +3,7 @@ import express from 'express';
 import morgan from 'morgan';
 import router from './router';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { join } from 'path';
 import { connect } from 'mongoose';
 import { HttpStatusCode } from './@types';
@@ -31,13 +32,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // Middleware: cookie parser
 app.use(cookieParser());
+// Middleware: CORS
+app.use(cors({
+    origin: process.env.NODE_ENV === 'production' ? 'https://catchit.shop' : '*',
+    credentials: true,
+}));
 
 // API Routes
 app.use('/api', router);
 // Static files & React build
 app.use(express.static(buildPath));
 // Regex for React routes
-app.get(/\/(login|register|account|my-articles|article(s?)|my-favorites|add-article|edit-article)/g, (req, res) => res.sendFile(join(buildPath, 'index.html')));
+app.get(/\/(login|register|account|my-articles|article(s?)|my-favorites|add-article|edit-article)/g, (_, res) => res.sendFile(join(buildPath, 'index.html')));
 // 404 route for API routes (Will return a JSON response)
 app.use('/api/*', (_, res) => res.status(HttpStatusCode.NOT_FOUND).json(NotFoundHelper()));
 // 404 route for all other non-API routes (React routes) (Will return a HTML response)

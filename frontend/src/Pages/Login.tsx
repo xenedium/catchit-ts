@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
     TextInput,
     PasswordInput,
@@ -15,43 +14,20 @@ import {
 } from '@mantine/core';
 
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
-import PublicUrl from '../Config';
-import { useNavigate } from 'react-router-dom';
 import { MagicSpinner } from 'react-spinners-kit';
+import { useLogin } from '../Hooks/useLogin';
 
 export default function Login() {
 
-    const navigate = useNavigate();
-    const [errors, setErrors] = useState<boolean>(false);
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-
-    const HandleLogin = () => {
-        fetch(`${PublicUrl}/api/auth-login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status === 200) {
-                    localStorage.setItem('token', `Bearer ${res.token}`);
-                    navigate(-1);
-                }
-                setErrors(true);
-            });
-    };
-
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            navigate('/');
-        }
-    }, [navigate]);
+    const {
+        errorMessages,
+        email,
+        password,
+        setEmail,
+        setPassword,
+        HandleLogin,
+        navigate
+    } = useLogin();
 
     return (
         <Container size={420} my={40}>
@@ -73,17 +49,20 @@ export default function Login() {
 
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                 <form>
-                    <TextInput label="Email" placeholder="you@mail.dev" required error={errors} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
-                    <PasswordInput label="Password" placeholder="Your password" required mt="md" error={errors} value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
+                    <TextInput label="Email" placeholder="you@mail.dev" required error={errorMessages.length > 0} value={email} onChange={(e) => setEmail(e.currentTarget.value)} />
+                    <PasswordInput label="Password" placeholder="Your password" required mt="md" error={errorMessages.length > 0} value={password} onChange={(e) => setPassword(e.currentTarget.value)} />
                     <Group position="apart" mt="md">
                         <Checkbox label="Remember me" />
-                        <Anchor<'a'> onClick={(event) => event.preventDefault()} size="sm">
+                        <Anchor<'a'> onClick={(event) => {
+                            event.preventDefault();
+                            alert('Not implemented yet');
+                        }} size="sm">
                             Forgot password?
                         </Anchor>
                     </Group>
                     <Space h={20} />
-                    <Alert icon={<AlertCircle size={16} />} title="Error!" color="red" hidden={!errors}>
-                        Email or password is incorrect. Try again
+                    <Alert icon={<AlertCircle size={16} />} title="Error!" color="red" hidden={errorMessages.length <= 0}>
+                        {errorMessages.map((error) => error)}
                     </Alert>
                     <Button fullWidth mt="xl" onClick={HandleLogin}>
                         Sign in
