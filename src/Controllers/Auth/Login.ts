@@ -3,7 +3,7 @@ import { User } from '../../Models';
 import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
 import { pbkdf2Sync } from 'crypto';
 import { sign } from 'jsonwebtoken';
-import { UserHelper } from '../../@types/Helpers';
+import { BadRequestHelper, InternalServerErrorHelper, UserHelper } from '../../@types/Helpers';
 
 export const Login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
@@ -38,15 +38,7 @@ export const Login = async (req: Request, res: Response) => {
                 errors: ['Email or password is incorrect'],
             } as ServerJsonResponse) :
             err.message === 'Invalid email or password' ?
-                res.status(HttpStatusCode.BAD_REQUEST).json({
-                    statusCode: HttpStatusCode.BAD_REQUEST,
-                    message: 'Validation failed',
-                    errors: ['Invalid email or password'],
-                } as ServerJsonResponse) :
-                res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-                    statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-                    message: 'Internal server error',
-                    errors: ['Couldn\'t find user'],
-                } as ServerJsonResponse);
+                res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper({message: 'Invalid email or password'})) :
+                res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(InternalServerErrorHelper('Could not login user'));
     }
 };

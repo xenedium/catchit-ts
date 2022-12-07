@@ -3,18 +3,14 @@ import { User } from '../../Models';
 import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
 import { randomBytes, pbkdf2Sync } from 'crypto';
 import { sign } from 'jsonwebtoken';
-import { S3LocationHelper, UserHelper } from '../../@types/Helpers';
+import { BadRequestHelper, InternalServerErrorHelper, S3LocationHelper, UserHelper } from '../../@types/Helpers';
 
 export const Register = async (req: Request, res: Response) => {
     const { firstName, lastName, email, phoneNumber, password, city } = req.body;
     const image = req.file as Express.MulterS3.File;
 
     if (!password || password.length < 8) {
-        return res.status(HttpStatusCode.BAD_REQUEST).json({
-            statusCode: HttpStatusCode.BAD_REQUEST,
-            message: 'Validation failed',
-            errors: ['Path `password` is shorter than the minimum allowed length (8).'],
-        } as ServerJsonResponse);
+        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper({message: 'Path `password` is shorter than the minimum allowed length (8).'}));
     }
 
     const salt = randomBytes(16).toString('hex');
@@ -35,30 +31,16 @@ export const Register = async (req: Request, res: Response) => {
         await user.validate();
     }
     catch (err) {
-        return res.status(HttpStatusCode.BAD_REQUEST).json({
-            statusCode: HttpStatusCode.BAD_REQUEST,
-            message: 'Validation failed',
-            errors: [
-                ...Object.values(err.errors).map((error: any) => error.message)
-            ],
-        } as ServerJsonResponse);
+        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper(err));
     }
     try {
         await user.save();
     }
     catch (err) {
         if (err.code === 11000) {
-            return res.status(HttpStatusCode.BAD_REQUEST).json({
-                statusCode: HttpStatusCode.BAD_REQUEST,
-                message: 'Validation failed',
-                errors: ['Email or phone number already exists'],
-            } as ServerJsonResponse);
+            return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper({message: 'Email or phone number already exists'}));
         }
-        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-            statusCode: HttpStatusCode.INTERNAL_SERVER_ERROR,
-            message: 'Internal server error',
-            errors: ['Couldn\'t save user'],
-        } as ServerJsonResponse);
+        return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(InternalServerErrorHelper('Could not save user'));
     }
 
     const token = sign({ id: user._id }, process.env.JWT_SECRET, {
