@@ -16,7 +16,6 @@ import {
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 import { MagicSpinner } from 'react-spinners-kit';
 import { useLogin } from '../Hooks/useLogin';
-import { FullLoader } from '../Components/Others/FullLoader';
 
 export default function Login() {
 
@@ -27,13 +26,11 @@ export default function Login() {
         setEmail,
         setPassword,
         HandleLogin,
-        navigate,
-        loading
+        navigate
     } = useLogin();
 
     return (
         <Container size={420} my={40}>
-            {loading && <FullLoader />}
             <Container className="text-center d-flex flex-column align-content-center align-items-center">
                 <MagicSpinner size={100} color="#000000" />
             </Container>

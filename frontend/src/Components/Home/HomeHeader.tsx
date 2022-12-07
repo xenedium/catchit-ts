@@ -1,26 +1,9 @@
-import React, { useState } from 'react';
-import {
-    createStyles,
-    Container,
-    Avatar,
-    UnstyledButton,
-    Group,
-    Text,
-    Menu,
-    Image
-} from '@mantine/core';
-import {
-    Logout,
-    Settings,
-    ShoppingCart,
-    ShoppingCartOff,
-    ChevronDown,
-    Heart,
-    Plus,
-} from 'tabler-icons-react';
+import { useState } from 'react';
+import { createStyles, Container, Avatar, UnstyledButton, Group, Text, Menu, Image } from '@mantine/core';
+import { Logout, Settings, ShoppingCart, ShoppingCartOff, ChevronDown, Heart, Plus } from 'tabler-icons-react';
 import CatchItLogo from '../../Assets/Images/CatchItLogo.jpeg';
-
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import type { HeaderTabsProps } from '../../@types';
 
 const useStyles = createStyles((theme) => ({
     header: {
@@ -84,28 +67,15 @@ const useStyles = createStyles((theme) => ({
         color: `${theme.colorScheme === 'dark' ? theme.white : theme.black} !important`,
         borderColor: `${theme.colors[theme.primaryColor][6]} !important`,
     },
+    link: {
+        textDecoration: 'none',
+    }
 }));
 
-interface HeaderTabsProps {
-    user: { name: string; image: string };
-}
-
-const HandleLogout = (navigate?: NavigateFunction) => {
-    if (navigate) {
-        navigate('/login');
-        return;
-    }
-
+const HandleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
 };
-
-
-const HandleAccountSettings = (navigate: NavigateFunction) => navigate('/account/');
-const HandleMyAvailableArticles = (navigate: NavigateFunction) => navigate('/my-articles/?sold=false');
-const HandleMySoldArticles = (navigate: NavigateFunction) => navigate('/my-articles/?sold=true');
-const HandleMyFavorites = (navigate: NavigateFunction) => navigate('/my-favorites');
-const HandleAddArticle = (navigate: NavigateFunction) => navigate('/add-article');
 
 export function HeaderTabsColored({ user }: HeaderTabsProps) {
     const navigate = useNavigate();
@@ -144,17 +114,29 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                             </UnstyledButton>
                         </Menu.Target>
                         <Menu.Dropdown>
-                            <Menu.Item icon={<Plus size={14} />} onClick={() => HandleAddArticle(navigate)} > Add article </Menu.Item>
-                            <Menu.Item icon={<Heart size={14} />} onClick={() => HandleMyFavorites(navigate)} > Favorites </Menu.Item>
-
-                            <Menu.Item icon={<ShoppingCart size={14} />} onClick={() => HandleMyAvailableArticles(navigate)} >My Listed Articles</Menu.Item>
-                            <Menu.Item icon={<ShoppingCartOff size={14} />} onClick={() => HandleMySoldArticles(navigate)}>My Sold Articles</Menu.Item>
-
+                            <Link to='/add-article' className={classes.link}>
+                                <Menu.Item icon={<Plus size={14} />}> Add article </Menu.Item>
+                            </Link>
+                            <Link to='/my-favorites' className={classes.link}>
+                                <Menu.Item icon={<Heart size={14} />}> Favorites </Menu.Item>
+                            </Link>
+                            <Link to='/my-articles?sold=false' className={classes.link}>
+                                <Menu.Item icon={<ShoppingCart size={14} />}>My Listed Articles</Menu.Item>
+                            </Link>
+                            <Link to='/my-articles?sold=true' className={classes.link}>
+                                <Menu.Item icon={<ShoppingCartOff size={14} />}>My Sold Articles</Menu.Item>
+                            </Link>
                             <Menu.Label>Settings</Menu.Label>
-                            <Menu.Item icon={<Settings size={14} />} onClick={() => HandleAccountSettings(navigate)} >Account settings</Menu.Item>
-                            <Menu.Item icon={<Logout size={14} />} onClick={() => {
-                                user.name === 'Sign In' ? HandleLogout(navigate) : HandleLogout();
-                            }}>{user.name === 'Sign In' ? 'Sign In' : 'Log Out'}</Menu.Item>
+                            <Link to='/account' className={classes.link}>
+                                <Menu.Item icon={<Settings size={14} />}>Account settings</Menu.Item>
+                            </Link>
+                            {
+                                user.name === 'Sign In' ?
+                                    <Link to='/login' className={classes.link}>
+                                        <Menu.Item icon={<Logout size={14} />} >Sign In</Menu.Item>
+                                    </Link> :
+                                    <Menu.Item icon={<Logout size={14} />} onClick={() => HandleLogout()}>Log Out</Menu.Item>
+                            }
                         </Menu.Dropdown>
 
                     </Menu>
