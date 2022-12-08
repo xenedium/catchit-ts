@@ -15,7 +15,6 @@ export default function Login() {
         HandleLogin,
         navigate
     } = useLogin();
-
     return (
         <Container size={420} my={40}>
             {!loading && (
@@ -53,7 +52,10 @@ export default function Login() {
                             <Alert icon={<AlertCircle size={16} />} title="Error!" color="red" hidden={errorMessages.length <= 0}>
                                 {errorMessages.map((error) => error)}
                             </Alert>
-                            <Button fullWidth mt="xl" onClick={HandleLogin}>
+                            <Button fullWidth mt="xl" onClick={(e) => {
+                                e.preventDefault();
+                                HandleLogin();
+                            }} type='submit'>
                                 Sign in
                             </Button>
                         </form>

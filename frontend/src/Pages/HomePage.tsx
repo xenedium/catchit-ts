@@ -1,17 +1,5 @@
 import { Layout } from '../Components/Others/Layout';
-import {
-    createStyles,
-    Image,
-    Container,
-    Title,
-    Button,
-    Group,
-    Text,
-    List,
-    ThemeIcon,
-    Space,
-    Anchor,
-} from '@mantine/core';
+import { createStyles, Image, Container, Title, Button, Group, Text, List, ThemeIcon, Space, Anchor, Kbd } from '@mantine/core';
 import { Check } from 'tabler-icons-react';
 import { Link } from 'react-router-dom';
 
@@ -119,6 +107,9 @@ export default function HomePage() {
                             </List.Item>
                             <List.Item>
                                 <b>CRUD </b> - All CRUD operations are implemented in the backend
+                            </List.Item>
+                            <List.Item>
+                                <b>DarkMode </b> - Toggle the DarkMode by using the hotkey <Kbd>Ctrl</Kbd><span style={{ margin: '0 5px' }}>+</span><Kbd>J</Kbd>
                             </List.Item>
                         </List>
 

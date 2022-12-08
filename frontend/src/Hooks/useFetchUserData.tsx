@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { ServerJsonResponse, UserDto } from '../@types';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export const useFetchUserData = () => {
     const [userData, setUserData] = useState<UserDto | undefined>(undefined);
@@ -14,7 +15,8 @@ export const useFetchUserData = () => {
             setUserData(data.user);
             setLoading(false);
         };
-        fetchUserData();
+        if (Cookies.get('catchit-token')) fetchUserData();
+        else setLoading(false);
     }, []);
 
     return { userData, loading };
