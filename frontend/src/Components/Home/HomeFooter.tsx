@@ -7,6 +7,7 @@ const useStyles = createStyles((theme) => ({
     footer: {
         marginTop: 120,
         borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
+        backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 9 : 1],
     },
 
     inner: {
@@ -26,6 +27,10 @@ const useStyles = createStyles((theme) => ({
             marginBottom: theme.spacing.sm,
         },
     },
+    text: {
+        lineHeight: 1,
+        color: theme.colorScheme === 'dark' ? 'white' : 'grey'
+    }
 }));
 
 
@@ -39,6 +44,7 @@ export function FooterCentered({ links }: FooterCenteredProps) {
             sx={{ lineHeight: 1 }}
             onClick={(event) => event.preventDefault()}
             size="sm"
+            className={classes.text}
         >
             {link.label}
         </Anchor>
@@ -48,9 +54,7 @@ export function FooterCentered({ links }: FooterCenteredProps) {
         <div className={classes.footer}>
             <div className={classes.inner}>
                 <Image src={CatchItLogo} alt="CatchIt Logo" width={120} height={60} />
-
                 <Group className={classes.links}>{items}</Group>
-
                 <Group spacing="xs" position="right" noWrap>
                     <ActionIcon size="lg" variant="default" radius="xl">
                         <IconBrandTwitter size={18} stroke={1.5} />

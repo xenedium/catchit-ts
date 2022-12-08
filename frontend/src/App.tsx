@@ -28,7 +28,7 @@ const App = () => {
     useHotkeys([['mod+J', () => toggleColorScheme()]]);
     return (
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-            <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+            <MantineProvider theme={{ colorScheme, primaryColor: 'gray' }} withGlobalStyles withNormalizeCSS>
                 <BrowserRouter>
                     <Routes>
                         <Route path='/' element={<HomePage />} />

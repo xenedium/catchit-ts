@@ -8,8 +8,7 @@ import type { HeaderTabsProps } from '../../@types';
 const useStyles = createStyles((theme) => ({
     header: {
         paddingTop: theme.spacing.sm,
-        backgroundColor: theme.colors.dark[6],
-        borderBottom: `1px solid ${theme.colors.dark[6]}`,
+        backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 7 : 3],
     },
 
     mainSection: {
@@ -23,13 +22,13 @@ const useStyles = createStyles((theme) => ({
     },
 
     user: {
-        color: theme.white,
         padding: `${theme.spacing.xs}px ${theme.spacing.sm}px`,
         borderRadius: theme.radius.sm,
         transition: 'background-color 100ms ease',
+        backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 8 : 1],
 
         '&:hover': {
-            backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 7 : 5],
+            backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 9 : 0],
         },
     },
 
@@ -40,7 +39,7 @@ const useStyles = createStyles((theme) => ({
     },
 
     userActive: {
-        backgroundColor: theme.colors.dark[theme.colorScheme === 'dark' ? 7 : 5],
+        backgroundColor: theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 9 : 0],
     },
 
     tabs: {
@@ -69,6 +68,10 @@ const useStyles = createStyles((theme) => ({
     },
     link: {
         textDecoration: 'none',
+    },
+    text: {
+        lineHeight: 1,
+        color: theme.colorScheme === 'dark' ? 'white' : 'black'
     }
 }));
 
@@ -79,7 +82,7 @@ const HandleLogout = () => {
 
 export function HeaderTabsColored({ user }: HeaderTabsProps) {
     const navigate = useNavigate();
-    const { classes, theme, cx } = useStyles();
+    const { classes, cx, theme } = useStyles();
     const [userMenuOpened, setUserMenuOpened] = useState(false);
 
 
@@ -106,10 +109,10 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                             >
                                 <Group spacing={7}>
                                     <Avatar src={user.image} alt={user.name} radius="xl" size={20} />
-                                    <Text weight={500} size="sm" sx={{ lineHeight: 1, color: theme.white }} mr={3}>
+                                    <Text weight={500} size="sm" className={classes.text} mr={3}>
                                         {user.name}
                                     </Text>
-                                    <ChevronDown size={12} />
+                                    <ChevronDown size={12} color={theme.colorScheme === 'dark' ? 'white' : 'black'} />
                                 </Group>
                             </UnstyledButton>
                         </Menu.Target>

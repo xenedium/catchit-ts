@@ -9,6 +9,7 @@ export const useLogin = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(true);
 
     const HandleLogin = async () => {
         const { data } = await axios.post<ServerJsonResponse>('/api/auth/login',
@@ -23,11 +24,13 @@ export const useLogin = () => {
     };
 
     useEffect(() => {
-        const token = Cookies.get('token');
+        const token = Cookies.get('catchit-token');
         if (token) navigate(-1);
+        else setLoading(false);
     }, [navigate]);
 
     return {
+        loading,
         errorMessages,
         email,
         password,
