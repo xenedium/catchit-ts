@@ -12,6 +12,7 @@ export const useFetchUserData = () => {
             const { data } = await axios.get<ServerJsonResponse>('/api/user/me',
                 { validateStatus: () => true, withCredentials: true }
             );
+            if (data.statusCode !== 200) Cookies.remove('catchit-token');
             setUserData(data.user);
             setLoading(false);
         };

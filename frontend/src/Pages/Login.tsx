@@ -1,9 +1,15 @@
-import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Alert, Space } from '@mantine/core';
+import { TextInput, PasswordInput, Checkbox, Anchor, Paper, Title, Text, Container, Group, Button, Alert, Space, createStyles } from '@mantine/core';
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 import { MagicSpinner } from 'react-spinners-kit';
 import { useLogin } from '../Hooks/useLogin';
 
+
+const useStyles = createStyles(() => ({}));
+
+
 export default function Login() {
+
+    const { theme } = useStyles();
 
     const {
         loading,
@@ -20,7 +26,11 @@ export default function Login() {
             {!loading && (
                 <>
                     <Container className="text-center d-flex flex-column align-content-center align-items-center">
-                        <MagicSpinner size={100} color="#000000" />
+                        {
+                            theme.colorScheme === 'dark' ?
+                                <MagicSpinner size={100} color='#ffffff' /> :
+                                <MagicSpinner size={100} color='#000000' />
+                        }
                     </Container>
                     <Title
                         align="center"

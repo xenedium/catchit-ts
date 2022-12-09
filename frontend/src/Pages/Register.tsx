@@ -1,10 +1,15 @@
-import { TextInput, PasswordInput, Anchor, Paper, Title, Text, Container, Group, Button, Select, Alert } from '@mantine/core';
+import { TextInput, PasswordInput, Anchor, Paper, Title, Text, Container, Group, Button, Select, Alert, createStyles } from '@mantine/core';
 import { AlertCircle, ArrowNarrowLeft } from 'tabler-icons-react';
 import { MagicSpinner } from 'react-spinners-kit';
 import { City } from '../@types';
 import { useRegister } from '../Hooks/useRegister';
 
+const useStyles = createStyles(() => ({
+
+}));
+
 export default function Register() {
+    const { theme } = useStyles();
 
     const {
         setEmail,
@@ -27,7 +32,11 @@ export default function Register() {
     return (
         <Container size={420} my={40}>
             <Container className="text-center d-flex flex-column align-content-center align-items-center">
-                <MagicSpinner size={100} color="#000000" />
+                {
+                    theme.colorScheme === 'dark' ?
+                        <MagicSpinner size={100} color='#ffffff' /> :
+                        <MagicSpinner size={100} color='#000000' />
+                }
             </Container>
             <Title
                 align="center"

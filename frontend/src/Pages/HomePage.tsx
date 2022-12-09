@@ -2,7 +2,8 @@ import { Layout } from '../Components/Others/Layout';
 import { createStyles, Image, Container, Title, Button, Group, Text, List, ThemeIcon, Space, Anchor, Kbd } from '@mantine/core';
 import { Check } from 'tabler-icons-react';
 import { Link } from 'react-router-dom';
-
+import Cookies from 'js-cookie';
+import HomeScreenImage from '../Assets/Svgs/image-homescreen.svg';
 
 const useStyles = createStyles((theme) => ({
     inner: {
@@ -99,8 +100,8 @@ export default function HomePage() {
                                 <b>Rest API </b> - All api calls are made through a REST API at /api/
                             </List.Item>
                             <List.Item>
-                                <b>Supports SignIn and SignUp </b> - Fully supports user login and registration,
-                                <Anchor style={{ fontSize: 14 }} href="https://jwt.io/"> using Json Web Tokens</Anchor>
+                                <b>Supports SignIn and SignUp </b> - Fully supports user login and registration,{' '}
+                                <Anchor style={{ fontSize: 14 }} href="https://jwt.io/">using Json Web Tokens</Anchor>
                             </List.Item>
                             <List.Item>
                                 <b>MongoDb </b> - All data are stored in a MongoDb database <Space />( User passwords are hashed and salted )
@@ -116,7 +117,7 @@ export default function HomePage() {
                         <Group mt={30}>
                             <Button radius="xl" size="md" className={classes.control}
                                 component={Link}
-                                to="/register"
+                                to={Cookies.get('catchit-token') ? '/articles' : '/register'}
                             >
                                 Get started
                             </Button>
@@ -133,7 +134,7 @@ export default function HomePage() {
 
                         </Group>
                     </div>
-                    <Image src={'https://ui.mantine.dev/_next/static/media/image.9a65bd94.svg'} className={classes.image} />
+                    <Image src={HomeScreenImage} className={classes.image} />
                 </div>
             </Container>
         </Layout>
