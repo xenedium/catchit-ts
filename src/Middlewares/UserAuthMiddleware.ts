@@ -1,4 +1,3 @@
-import type { IUser } from '../Models/Interfaces';
 import type { Request, Response, NextFunction } from 'express';
 import { type JwtPayload, verify } from 'jsonwebtoken';
 import { User } from '../Models';
@@ -10,7 +9,7 @@ export const UserAuthMiddleware = (isAdminRequired = false) => async (req: Reque
         const token = JwtExtractorHelper(req);
         if (!token) throw new Error('Unauthorized');
         const userId = (verify(token, process.env.JWT_SECRET) as JwtPayload).id;
-        const user = await User.findById(userId) as IUser;
+        const user = await User.findById(userId);
         if (!user) throw new Error('Unauthorized');
         if (isAdminRequired && !user.isAdmin) throw new Error('Forbidden');
         req.user = user;
