@@ -31,10 +31,11 @@ export const useUserData = () => {
             { validateStatus: () => true, withCredentials: true }
         );
         if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(response.message);
+        else setError(`Invalid fields: ${response.errors?.toString()}`);
     };
     const updatePassword = async (oldPassword: string, newPassword: string, newPasswordConfirm: string) => {
         if (newPassword !== newPasswordConfirm) return;
+        if (!newPassword || !oldPassword) return setError('Invalid fields: password');
         const { data: response } = await axios.put<ServerJsonResponse>('/api/user',
             {
                 oldPassword,
@@ -43,7 +44,7 @@ export const useUserData = () => {
             { validateStatus: () => true, withCredentials: true }
         );
         if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(response.message);
+        else setError(`Invalid fields: ${response.errors?.toString()}`);
     };
     const updateImage = async (image: File) => {
         const formData = new FormData();
@@ -53,7 +54,7 @@ export const useUserData = () => {
             { validateStatus: () => true, withCredentials: true }
         );
         if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(response.message);
+        else setError(`Invalid fields: ${response.errors?.toString()}`);
     };
 
     return { userData, loading, setUserData, updateUserData, updatePassword, updateImage, error, setError };
