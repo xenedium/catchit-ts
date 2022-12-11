@@ -35,6 +35,6 @@ declare namespace Express {
         image: string;
     }
     export interface Request {
-        user?: IUser;
+        user?: import('mongoose').Document<unknown, any, IUser> & IUser & { _id: import('mongoose').Types.ObjectId };
     }
 }
