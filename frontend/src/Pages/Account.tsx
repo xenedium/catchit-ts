@@ -1,232 +1,161 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Layout } from '../Components/Others/Layout';
-import { useNavigate } from 'react-router-dom';
-import { Container, Image, Space, Title, Button, TextInput, Select, PasswordInput, createStyles } from '@mantine/core';
+import {
+    Image, Space, Button, TextInput, Select, PasswordInput,
+    LoadingOverlay, Tabs, Container, Center, FileButton, Dialog, Text
+} from '@mantine/core';
 import { Edit, At, Phone, Check, User, Lock, Key } from 'tabler-icons-react';
-
-// "Everything that lives is designed to end.
-// They are perpetually trapped in a never-ending spiral of life and death.
-// However, life is all about the struggle within this cycle. That is what 'we' believe."
-// POD 153 @ Ending E.
-
-interface UserPayload {
-    id: number;
-    firstname: string;
-    lastname: string;
-    email: string;
-    phone_number: string;
-    city: string;
-    is_admin: boolean;
-    image: string;
-}
-
-const useStyles = createStyles((theme) => ({
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        marginTop: '6rem',
-        marginBottom: '10rem',
-        flexDirection: 'row',
-        [theme.fn.smallerThan('sm')]: {
-            flexDirection: 'column'
-        }
-    }
-}));
+import { useUserData } from '../Hooks/useUserData';
+import { City } from '../@types';
+import { IconUser, IconKey, IconPhoto } from '@tabler/icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function MyAccount() {
-    const { classes } = useStyles();
-    const [user, setUser] = useState<UserPayload | null>(null);
+
+    const [oldPassword, setOldPassword] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordConfirm, setPasswordConfirm] = useState<string>('');
+    const { userData, loading, error, setUserData, updateUserData, updatePassword, updateImage, setError } = useUserData();
     const navigate = useNavigate();
 
-    const HandleUserUpdate = () => {
-        fetch('/api/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                firstname: user?.firstname,
-                lastname: user?.lastname,
-                email: user?.email,
-                phoneNumber: user?.phone_number,
-                city: user?.city,
-            })
-        }).then(() => window.location.reload());
-    };
-
-    const HandlePasswordUpdate = () => {
-        if (password !== passwordConfirm) return;
-        fetch('/api/users/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-                password: password,
-            })
-        }).then(() => window.location.reload());
-    };
-    const HandleImageUpload = (e: any) => {
-
-        e.preventDefault();
-        let formData = new FormData();
-        formData.append('image', e.target.files[0]);
-        fetch('/api/users/',
-            {
-                method: 'POST',
-                headers:
-                {
-                    'Authorization': 'Bearer ' + window.localStorage.getItem('token')
-                },
-                body: formData
-            })
-            .then(res => {
-                if (res.status === 201) {
-                    window.location.reload();
-                }
-            });
-
-    };
-
-
     useEffect(() => {
-
-        const token: string | undefined = localStorage.getItem('token')?.split(' ')[1];
-
-        if (!token) navigate('/login');
-
-        fetch('/api/validate-jwt', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status !== 200) {
-                    localStorage.removeItem('token');
-                    navigate('/login');
-                }
-                setUser(res.payload);
-            });
-    }, [navigate]);
-
+        if (!loading && !userData) navigate('/login');
+    }, [loading]);
 
     return (
         <Layout>
-            {user ?
-
-                <Container className={classes.container}>
+            {
+                !loading && userData &&
+                <>
+                    <Dialog
+                        opened={error !== undefined}
+                        withCloseButton
+                        onClose={() => setError(undefined)}
+                        size="lg"
+                        radius="md"
+                    >
+                        <Text>{error}</Text>
+                    </Dialog>
+                    <LoadingOverlay visible={loading} />
                     <Container>
-                        <Title order={4} style={{ marginRight: 80, marginLeft: 80 }}>User Info</Title>
-                        <Space h={'md'} />
-                        <TextInput
-                            label="Firstname"
-                            value={user.firstname}
-                            icon={<User size={14} />}
-                            onChange={(e) => {
-                                setUser({ ...user, firstname: e.target.value });
-                            }}
-                        />
-                        <TextInput
-                            label="Lastname"
-                            value={user.lastname}
-                            icon={<User size={14} />}
-                            onChange={(e) => {
-                                setUser({ ...user, lastname: e.target.value });
-                            }}
-                        />
-                        <TextInput
-                            label="Email"
-                            value={user.email}
-                            icon={<At size={14} />}
-                            disabled
-                        />
-                        <TextInput
-                            label="Phone number"
-                            value={user.phone_number}
-                            icon={<Phone size={14} />}
-                            disabled
-                        />
-                        <Select
-                            label="City"
-                            placeholder="Select your city"
-                            data={[
-                                { value: 'Casablanca', label: 'Casablanca' },
-                                { value: 'Rabat', label: 'Rabat' },
-                                { value: 'Fes', label: 'Fes' },
-                                { value: 'Tanger', label: 'Tanger' },
-                                { value: 'Oujda', label: 'Oujda' },
-                                { value: 'Agadir', label: 'Agadir' },
-                                { value: 'Tetouan', label: 'Tetouan' },
-                                { value: 'Meknes', label: 'Meknes' },
-                                { value: 'Safi', label: 'Safi' },
-                                { value: 'El Jadida', label: 'El Jadida' },
-                                { value: 'Khouribga', label: 'Khouribga' },
-                                { value: 'Ouarzazate', label: 'Ouarzazate' },
-                                { value: 'Settat', label: 'Settat' },
-                                { value: 'Sidi Kacem', label: 'Sidi Kacem' },
-                                { value: 'Kenitra', label: 'Kenitra' },
-                                { value: 'Taza', label: 'Taza' },
-                                { value: 'Tiznit', label: 'Tiznit' },
-                                { value: 'Sidi Ifni', label: 'Sidi Ifni' },
-                            ]}
-                            value={user.city}
+                        <Tabs defaultValue={'userData'} variant='outline'>
+                            <Tabs.List>
+                                <Tabs.Tab value="userData" icon={<IconUser size={14} />}>User Information</Tabs.Tab>
+                                <Tabs.Tab value="password" icon={<IconKey size={14} />}>Password</Tabs.Tab>
+                                <Tabs.Tab value="picture" icon={<IconPhoto size={14} />}>Profile picture</Tabs.Tab>
+                            </Tabs.List>
+                            <Tabs.Panel value='userData'>
+                                <Center>
+                                    <Container>
+                                        <Space h={'md'} />
+                                        <TextInput
+                                            label="Firstname"
+                                            value={userData?.firstName}
+                                            icon={<User size={14} />}
+                                            onChange={(e) => {
+                                                if (userData)
+                                                    setUserData({ ...userData, firstName: e.target.value });
+                                            }}
+                                        />
+                                        <TextInput
+                                            label="Lastname"
+                                            value={userData?.lastName}
+                                            icon={<User size={14} />}
+                                            onChange={(e) => {
+                                                if (userData)
+                                                    setUserData({ ...userData, lastName: e.target.value });
+                                            }}
+                                        />
+                                        <TextInput
+                                            label="Email"
+                                            value={userData?.email}
+                                            icon={<At size={14} />}
+                                            disabled
+                                        />
+                                        <TextInput
+                                            label="Phone number"
+                                            value={userData?.phoneNumber}
+                                            icon={<Phone size={14} />}
+                                            disabled
+                                        />
+                                        <Select
+                                            label="City"
+                                            placeholder="Select your city"
+                                            data={Object.values(City).map((city) => ({ label: city, value: city }))}
+                                            value={userData?.city}
 
-                            onChange={(city: string) => {
-                                setUser({ ...user, city: city });
-                            }}
-                        />
+                                            onChange={(city: string) => {
+                                                if (userData)
+                                                    setUserData({ ...userData, city: city as City });
+                                            }}
+                                        />
 
-                        <Space h="lg" />
-                        <Button leftIcon={<Check />} onClick={HandleUserUpdate}> Update </Button>
+                                        <Space h="lg" />
+                                        <Button leftIcon={<Check />} onClick={() => updateUserData()} fullWidth> Update </Button>
+                                    </Container>
+                                </Center>
+                            </Tabs.Panel>
+                            <Tabs.Panel value='password'>
+                                <Center>
+                                    <Container>
+                                        <PasswordInput
+                                            label="Old Password"
+                                            value={oldPassword}
+                                            icon={<Lock size={14} />}
+                                            onChange={(e) => {
+                                                setOldPassword(e.target.value);
+                                            }}
+                                            style={{
+                                                marginTop: '1rem',
+                                            }}
+                                            placeholder="Enter your old password"
+                                        />
+                                        <PasswordInput
+                                            label="New Password"
+                                            value={password}
+                                            icon={<Lock size={14} />}
+                                            onChange={(e) => {
+                                                setPassword(e.target.value);
+                                            }}
+                                            style={{
+                                                marginTop: '1rem',
+                                            }}
+                                            placeholder="Enter your new password"
+                                        />
+                                        <PasswordInput
+                                            label="Confirm Password"
+                                            value={passwordConfirm}
+                                            icon={<Lock size={14} />}
+                                            onChange={(e) => {
+                                                setPasswordConfirm(e.target.value);
+                                            }}
+                                            error={password !== passwordConfirm ? 'Passwords do not match' : ''}
+                                            style={{
+                                                marginTop: '1rem',
+                                            }}
+                                            placeholder="Confirm your new password"
+                                        />
+                                        <Space h="lg" />
+                                        <Button leftIcon={<Key />} fullWidth onClick={() => updatePassword(oldPassword, password, passwordConfirm)} > Update Password </Button>
+                                    </Container>
+                                </Center>
+                            </Tabs.Panel>
+                            <Tabs.Panel value='picture'>
+                                <Center>
+                                    <Container>
+                                        <Space h="xs" />
+                                        <Image src={userData?.image} height={250} width={250} radius="xl" />
+                                        <Space h="xs" />
+                                        <FileButton onChange={updateImage} accept="image/*">
+                                            {(props) => <Button fullWidth leftIcon={<Edit />} {...props}>Upload image</Button>}
+                                        </FileButton>
+                                    </Container>
+                                </Center>
+                            </Tabs.Panel>
+                        </Tabs>
                     </Container>
-                    <Container style={{ marginTop: 100 }}>
-                        <Title order={4} style={{ marginRight: 50, marginLeft: 50 }}> Update Password </Title>
-                        <PasswordInput
-                            label="New Password"
-                            value={password}
-                            icon={<Lock size={14} />}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                            }}
-                            style={{
-                                marginTop: '1rem',
-                            }}
-                            placeholder="Enter your new password"
-                        />
-                        <PasswordInput
-                            label="Confirm Password"
-                            value={passwordConfirm}
-                            icon={<Lock size={14} />}
-                            onChange={(e) => {
-                                setPasswordConfirm(e.target.value);
-                            }}
-                            error={password !== passwordConfirm ? 'Passwords do not match' : ''}
-                            style={{
-                                marginTop: '1rem',
-                            }}
-                            placeholder="Confirm your new password"
-                        />
-                        <Space h="lg" />
-                        <Button leftIcon={<Key />} onClick={HandlePasswordUpdate} > Update Password </Button>
-                    </Container>
-                    <Container size="xs" className="d-flex flex-column align-items-center" style={{ marginTop: 100 }}>
-                        <Title order={4}>Profile Picture</Title>
-                        <Space h="xs" />
-                        <Image src={user.image ? `https://catchit.fra1.digitaloceanspaces.com${user.image}` : 'https://catchit.fra1.digitaloceanspaces.com/assets/not_signed_in.png'} height={250} width={250} radius="xl" />
-                        <Space h="xs" />
-                        <Button leftIcon={<Edit />} onClick={() => {document.getElementById('file')?.click();}}> Upload image </Button>
-                        <input type="file" id="file" onChange={HandleImageUpload} hidden/>
-                    </Container>
-                </Container>
-
-
-
-                : <></>}
-        </Layout>
+                </>
+            }
+        </Layout >
     );
 }
