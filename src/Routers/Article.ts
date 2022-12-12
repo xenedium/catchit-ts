@@ -1,8 +1,8 @@
 import { Router } from 'express';
-// import { ArticleControllers } from '../Controllers';
+import { ArticleControllers } from '../Controllers';
 
 const articleRouter = Router();
 
-// articleRouter.get('/', ArticleControllers.test);
+articleRouter.get('/:id', ArticleControllers.GetOne);
 
 export default articleRouter;

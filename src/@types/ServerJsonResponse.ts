@@ -4,6 +4,7 @@ export type ServerJsonResponse = {
     statusCode: number;
     message: string;
     errors?: string[];
+    doc?: any;
     docs?: any[];
     totalDocs?: number;
     totalPages?: number;

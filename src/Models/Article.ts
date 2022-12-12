@@ -20,7 +20,7 @@ const ArticleSchema = new Schema<IArticle>({
         maxlength: 255,
     },
     category: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: 'Category',
     },

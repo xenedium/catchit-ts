@@ -3,6 +3,7 @@ import { Layout } from '../Components/Others/Layout';
 import { useNavigate } from 'react-router-dom';
 import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog } from '@mantine/core';
 import { Edit, Plus } from 'tabler-icons-react';
+import type { CategoryDto } from '../@types';
 
 // Evil Is Evil. Lesser, Greater, Middling, Makes No Difference.
 // The Degree Is Arbitrary, The Definitions Blurred.
@@ -22,11 +23,7 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface CategoryDto {
-    _id: string;
-    name: string;
-    image: string;
-}
+
 
 export default function AddArticle() {
 

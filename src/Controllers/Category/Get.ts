@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
-import { InternalServerErrorHelper, NotFoundHelper } from '../../@types/Helpers';
+import { CategoryHelper, InternalServerErrorHelper, NotFoundHelper } from '../../@types/Helpers';
 import { Category } from '../../Models';
 
 export const GetOne = async (req: Request, res: Response) => {
@@ -16,14 +16,11 @@ export const GetOne = async (req: Request, res: Response) => {
         return res.status(HttpStatusCode.OK).json({
             statusCode: HttpStatusCode.OK,
             message: 'Category found',
-            data: {
-                _id: category._id,
-                name: category.name,
-                image: category.image,
-            }
+            doc: CategoryHelper(category)
         } as ServerJsonResponse);
     }
     catch (error) {
+        if (error.name === 'CastError' && error.kind === 'ObjectId') return res.status(HttpStatusCode.NOT_FOUND).json(NotFoundHelper('Category not found'));
         return res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json(InternalServerErrorHelper('Could not get category'));
     }
 };
@@ -36,11 +33,7 @@ export const GetMany = async (req: Request, res: Response) => {
         return res.status(HttpStatusCode.OK).json({
             statusCode: HttpStatusCode.OK,
             message: 'Categories found',
-            docs: categories.map(category => ({
-                _id: category._id,
-                name: category.name,
-                image: category.image,
-            })),
+            docs: categories.map(category => CategoryHelper(category)),
             totalDocs: categories.length
         } as ServerJsonResponse);
     }

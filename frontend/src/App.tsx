@@ -36,11 +36,11 @@ const App = () => {
                         <Route path='/register' element={<Register />} />
                         <Route path='/account' element={<Account />} />
                         <Route path='/my-articles' element={<MyArticles />} />
-                        <Route path='/article' element={<Article />} />
+                        <Route path='/article/:id' element={<Article />} />
                         <Route path='/my-favorites' element={<Favorites />} />
                         <Route path='/articles' element={<Articles />} />
                         <Route path='/add-article' element={<AddArticle />} />
-                        <Route path='/edit-article' element={<EditArticle />} />
+                        <Route path='/edit-article/:id' element={<EditArticle />} />
                         <Route path="*" element={<Error404 />} />
                     </Routes>
                 </BrowserRouter>
