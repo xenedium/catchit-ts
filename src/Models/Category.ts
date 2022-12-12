@@ -17,7 +17,7 @@ const CategorySchema = new Schema<ICategory>({
         default: Date.now,
     },
     createdBy: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
         ref: 'User',
     },

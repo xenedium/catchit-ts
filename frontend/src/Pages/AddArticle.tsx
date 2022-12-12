@@ -22,10 +22,10 @@ const useStyles = createStyles((theme) => ({
     }
 }));
 
-interface Category {
-    id: number;
+interface CategoryDto {
+    _id: string;
     name: string;
-    image: string | null;
+    image: string;
 }
 
 export default function AddArticle() {
@@ -44,7 +44,7 @@ export default function AddArticle() {
     const [imgBuffer, setImgBuffer] = useState<string>();
     const [error, setError] = useState<boolean>(false);
 
-    const [categories, setCategories] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<CategoryDto[]>([]);
 
 
     useEffect(() => {
@@ -133,7 +133,7 @@ export default function AddArticle() {
                             label="Category"
                             placeholder="Category"
                             required
-                            data={categories.map(category => { return { value: category.id as unknown as string, label: category.name }; })}
+                            data={categories.map(category => { return { value: category._id, label: category.name }; })}
                             value={category as unknown as string}
                             onChange={(cat: string) => setCategory(cat as unknown as number)}
                             error={error}

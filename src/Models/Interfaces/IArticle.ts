@@ -7,7 +7,7 @@ export interface IArticle {
     images: string[];
     description: string;
     category: string;
-    seller: string;
+    seller: Types.ObjectId;
     condition: string;
     price: number;
     createdAt: Date;

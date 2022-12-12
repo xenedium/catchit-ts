@@ -10,7 +10,8 @@ export const Create = async (req: Request, res: Response) => {
     const category = new Category({
         name,
         description,
-        image: image.location,
+        image: image?.location,
+        createdBy: req.user._id
     });
 
     try {

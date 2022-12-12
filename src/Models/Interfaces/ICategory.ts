@@ -1,9 +1,9 @@
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
 export interface ICategory {
     _id: Types.ObjectId;
     name: string;
     image: string;
     createdAt: Date;
-    createdBy: string;
+    createdBy: mongoose.Schema.Types.ObjectId;
 }
