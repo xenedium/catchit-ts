@@ -1667,12 +1667,12 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
-"@mantine/carousel@^5.9.0":
-  version "5.9.0"
-  resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-5.9.0.tgz#e5e1e8002e3db83fce949481408bc3f803a36509"
-  integrity sha512-M8MBBTyPPd9W2WljmJ9JXdYeCwe5E2eKGCmFUVSRGJf9Ykq9N2gxE7pPRhB+71G4S93zUNWa7BG8wGSiyR411g==
+"@mantine/carousel@^5.9.4":
+  version "5.9.4"
+  resolved "https://registry.yarnpkg.com/@mantine/carousel/-/carousel-5.9.4.tgz#1d4d85b7fc6a652128bf3422753e463f6d0f4cc1"
+  integrity sha512-gXpVxfSIrZGjc2Js2FAsTPA2i+40DJe57qVKPIHlzW30/Jdfb6Ve9ekdMkB6GiM8F0ogHlP+nVcQ1fGpc9vjvQ==
   dependencies:
-    "@mantine/utils" "5.9.0"
+    "@mantine/utils" "5.9.4"
 
 "@mantine/core@^5.9.0":
   version "5.9.0"
@@ -1769,6 +1769,11 @@
   version "5.9.0"
   resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.9.0.tgz#f21ba4c518a6561bea079c7c909298f35f492a99"
   integrity sha512-UU5kO1VcsntrKvznJMjZ1S/ZM6arAXFkBnBqAKfCPOPJJIcwUWOfQP8u1sxp8ounAHThp9GtkpuzzGOQy1rcPA==
+
+"@mantine/utils@5.9.4":
+  version "5.9.4"
+  resolved "https://registry.yarnpkg.com/@mantine/utils/-/utils-5.9.4.tgz#3d3b7646eabaffe6cb4b02083317cc8f9565d03e"
+  integrity sha512-NZAn30jjF52X+MFnkO3oaVgo2LPx3o/QxYlcuMkRBUTZALEXvQgrD0OyGDRgEXnfMdmkBP6rk3Pol6yXXEwU6w==
 
 "@nicolo-ribaudo/eslint-scope-5-internals@5.1.1-v1":
   version "5.1.1-v1"

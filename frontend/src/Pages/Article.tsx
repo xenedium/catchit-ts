@@ -3,8 +3,8 @@ import { Container, Image, Title, createStyles, Text, Badge, Button, Modal, Dial
 import { useLocalStorage } from '@mantine/hooks';
 import { Check, Heart, Pencil, UserCircle } from 'tabler-icons-react';
 import { useArticle } from '../Hooks/useArticle';
+import { Carousel } from '@mantine/carousel';
 
-// TODO: NEED TO HANDLE AND DISPLAY MULTIPLE IMAGES INSTEAD OF JUST ONE
 
 const useStyles = createStyles((theme) => ({
     container: {
@@ -35,10 +35,17 @@ export default function ArticlePage() {
                 <Container style={{ marginTop: 40, marginBottom: 40 }}>
                     <Container className={classes.container}>
                         <Container>
-                            <Image
-                                src={article.images[0]}
-                                alt={article.title}
-                            />
+                            <Carousel slideSize="70%" height={'100%'} slideGap="md" loop withIndicators>
+                                {
+                                    article.images.map((image, index) => (
+                                        <Carousel.Slide key={index}>
+                                            <Image
+                                                src={image}
+                                            />
+                                        </Carousel.Slide>
+                                    ))
+                                }
+                            </Carousel>
                         </Container>
                         <Container style={{ maxWidth: 360 }}>
                             <Title order={2} >
@@ -65,26 +72,26 @@ export default function ArticlePage() {
                             <Container style={{ marginTop: 30 }} >
                                 {
                                     isArticleOwner &&
-                                        <Button
-                                            fullWidth
-                                            color={'red'}
-                                            onClick={() => { }}
-                                            leftIcon={<Check />}
-                                        >
-                                            {article.isSold ? 'Mark as available' : 'Mark as sold'}
-                                        </Button>
+                                    <Button
+                                        fullWidth
+                                        color={'red'}
+                                        onClick={() => { }}
+                                        leftIcon={<Check />}
+                                    >
+                                        {article.isSold ? 'Mark as available' : 'Mark as sold'}
+                                    </Button>
                                 }
                                 {
                                     isArticleOwner &&
-                                        <Button
-                                            leftIcon={<Pencil />}
-                                            style={{ marginTop: 10 }}
-                                            fullWidth
-                                            color={'red'}
-                                            onClick={() => { }}
-                                        >
-                                            Edit article
-                                        </Button>
+                                    <Button
+                                        leftIcon={<Pencil />}
+                                        style={{ marginTop: 10 }}
+                                        fullWidth
+                                        color={'red'}
+                                        onClick={() => { }}
+                                    >
+                                        Edit article
+                                    </Button>
                                 }
                                 <Button
                                     style={{ marginTop: 10 }}
