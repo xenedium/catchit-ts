@@ -24,7 +24,16 @@ export default function ArticlePage() {
     const { loading, article, isModalOpen, isDialogOpen, isArticleOwner, setIsModalOpen, setIsDialogOpen } = useArticle();
     const [favorites, setFavorites] = useLocalStorage<string[]>({
         key: 'favorites',
-        defaultValue: []
+        defaultValue: [],
+        deserialize: (value) => {
+            try {
+                return JSON.parse(value);
+            }
+            catch (e) {
+                localStorage.removeItem('favorites');
+                return [];
+            }
+        },
     });
 
     return (

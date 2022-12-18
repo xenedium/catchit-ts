@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useLocalStorage } from '@mantine/hooks';
 import { Layout } from '../Components/Others/Layout';
 import { Badge, Card, Container, Group, Image, LoadingOverlay, SimpleGrid, Title, UnstyledButton, Text, createStyles, Avatar } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { NothingFoundType } from '../@types/props';
 import { NothingFound } from '../Components/Others/NothingFound';
-import { ArticleDto, ServerJsonResponse } from '../@types';
+import { ArticleDto, HttpStatusCode, ServerJsonResponse } from '../@types';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -21,29 +21,38 @@ const useStyles = createStyles((theme) => ({
 
 export default function Favorites() {
     const { classes } = useStyles();
-    const [favorites] = useLocalStorage<string[]>({
-        key: 'favorites',
-        defaultValue: []
-    });
-
     const [articles, setArticles] = useState<ArticleDto[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
+    const [favorites] = useLocalStorage<string[]>({
+        key: 'favorites',
+        defaultValue: [],
+        getInitialValueInEffect: false,
+        deserialize: (value) => {
+            try {
+                return JSON.parse(value);
+            }
+            catch (e) {
+                localStorage.removeItem('favorites');
+                return [];
+            }
+        }
+    });
+
     useEffect(() => {
-        Promise.all(favorites.map(id => axios.get<ServerJsonResponse>(`/api/article/${id}`)))
+        Promise.all(favorites.map(id => axios.get<ServerJsonResponse>(`/api/article/${id}`, { withCredentials: true, validateStatus: () => true })))
             .then(responses => {
-                const articles = responses.map(response => response.data.doc);
+                const articles = responses.filter(response => response.data.statusCode === HttpStatusCode.OK).map(response => response.data.doc);
                 setArticles(articles);
                 setIsLoading(false);
             });
-    }, [favorites]);
+    }, []);
 
     return (
         <Layout>
-            { /* XOR operation */}
-            <LoadingOverlay visible={isLoading !== (articles.length === 0)} />
+            <LoadingOverlay visible={isLoading} />
             {
-                articles.length === 0 ? <NothingFound type={NothingFoundType.NoFavorites} /> :
+                articles.length === 0 && !isLoading ? <NothingFound type={NothingFoundType.NoFavorites} /> :
                     <Container mt={20}>
                         <Title mb={40}>My favorite articles: </Title>
                         <SimpleGrid
