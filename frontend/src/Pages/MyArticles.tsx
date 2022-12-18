@@ -1,104 +1,75 @@
-import React, { useEffect, useState } from 'react';
 import { Layout } from '../Components/Others/Layout';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Grid, Title } from '@mantine/core';
-import { ArticleCard } from '../Components/Others/Card';
-import { FullLoader } from '../Components/Others/FullLoader';
+import { Container, Image, Title, LoadingOverlay, SimpleGrid, UnstyledButton, Card, Badge, Group, Text, Avatar, createStyles } from '@mantine/core';
 import { NothingFoundType } from '../@types/props';
 import { NothingFound } from '../Components/Others/NothingFound';
+import { Link } from 'react-router-dom';
+import { useMyArticles } from '../Hooks/useMyArticles';
 
-interface Article {
-    id: number;
-    title: string;
-    description: string;
-    category: number;
-    seller: number;
-    condition: string;
-    price: string;
-    quantity: number;
-    is_sold: boolean;
-    city: string;
-    image: string;
-}
+const useStyles = createStyles((theme) => ({
+    footer: {
+        padding: `${theme.spacing.xs}px ${theme.spacing.lg}px`,
+        marginTop: theme.spacing.md,
+        borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
+    },
+}));
 
 
 export default function MyArticles() {
-    const [articles, setArticles] = useState<Article[]>([]);
-    const [name, setName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [image, setImage] = useState<string>('');
-    const [searchParams] = useSearchParams();
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const token: string | undefined = localStorage.getItem('token')?.split(' ')[1];
-
-        if (!token) navigate('/login');
-
-        fetch('/api/validate-jwt', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status !== 200) {
-                    localStorage.removeItem('token');
-                    navigate('/login');
-                }
-                else {
-                    setName(res.payload.firstname);
-                    setEmail(res.payload.email);
-                    setImage(`https://catchit.fra1.digitaloceanspaces.com${res.payload.image}`);
-                    fetch(`/api/articles/?seller=${res.payload.id}`, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                        .then(res => res.json())
-                        .then(res => {
-                            if (res.status === 404)
-                            {
-                                setIsLoading(false);
-                                setArticles([]);
-                                return;
-                            }
-                            setArticles(res.data.filter((article: Article) => (searchParams.get('sold') === 'true' ? article.is_sold : !article.is_sold)));
-                            setIsLoading(false);
-                        });
-                }
-            });
-    }, [navigate, searchParams]);
+    const { classes } = useStyles();
+    const { articles, isLoading, sold } = useMyArticles();
 
     return (
         <Layout>
-            <Container style={{ marginTop: 40 }}>
-                <Title style={{marginBottom: 40}} >My {searchParams.get('sold') === 'true' ? 'sold' : 'listed'} articles: </Title>
-                <Grid>
-                    {!isLoading ?
-                        articles.length > 0 ? articles.map(article =>
-                            (
-                                <Grid.Col xs={4}>
-                                    <ArticleCard {...{
-                                        id: article.id,
-                                        image: article.image ? `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}` : 'https://catchit.fra1.digitaloceanspaces.com/assets/no_image.png',
-                                        title: article.title,
-                                        link: '/article/?id=' + article.id,
-                                        author: {
-                                            name: name,
-                                            description: email,
-                                            image: image
-                                        }
-
-                                    }} />
-                                </Grid.Col>
-                            ))
-                            : <NothingFound type={NothingFoundType.NoArticles} />          // No articles found
-                        : <FullLoader />                // Loading
-                    }
-                </Grid>
-            </Container>
+            <LoadingOverlay visible={isLoading} />
+            {
+                articles.length === 0 && !isLoading ? <NothingFound type={NothingFoundType.NoArticles} /> :
+                    <Container mt={20}>
+                        <Title mb={40}>My {sold ? 'Sold' : 'Listed'} articles: </Title>
+                        <SimpleGrid
+                            cols={3}
+                            breakpoints={[{ maxWidth: 600, cols: 1 }, { maxWidth: 1000, cols: 2 }]}
+                        >
+                            {
+                                articles.map(article =>
+                                    <UnstyledButton key={article._id} maw={400}>
+                                        <Link to={`/article/${article._id}`} style={{ textDecoration: 'none' }}>
+                                            <Card withBorder shadow='md' radius='md' p='lg'>
+                                                <Card.Section>
+                                                    <Image
+                                                        src={article.images[0]}
+                                                        alt={article.title}
+                                                        width={300}
+                                                        height={300}
+                                                    />
+                                                </Card.Section>
+                                                <Group position="apart" mt='lg'>
+                                                    <Title lineClamp={1} order={4}>{article.title}</Title>
+                                                    <Badge color={'pink'}>{article.price} MAD</Badge>
+                                                </Group>
+                                                <Text size="sm" color="dimmed" mt='md'>
+                                                    {article.description}
+                                                </Text>
+                                                <Card.Section className={classes.footer}>
+                                                    <Group mt='xs'>
+                                                        <Avatar src={article.seller.image} radius='sm' />
+                                                        <div>
+                                                            <Text size="xs" color="dimmed">
+                                                                {article.seller.firstName} {article.seller.lastName}
+                                                            </Text>
+                                                            <Text size="xs" color="dimmed">
+                                                                {article.seller.email}
+                                                            </Text>
+                                                        </div>
+                                                    </Group>
+                                                </Card.Section>
+                                            </Card>
+                                        </Link>
+                                    </UnstyledButton>
+                                )
+                            }
+                        </SimpleGrid>
+                    </Container>
+            }
         </Layout>
     );
 }
