@@ -4,6 +4,8 @@ import { NothingFoundType } from '../@types/props';
 import { NothingFound } from '../Components/Others/NothingFound';
 import { Link } from 'react-router-dom';
 import { useMyArticles } from '../Hooks/useMyArticles';
+import { Carousel } from '@mantine/carousel';
+import { ArticleDto } from '../@types';
 
 const useStyles = createStyles((theme) => ({
     footer: {
@@ -30,18 +32,24 @@ export default function MyArticles() {
                             breakpoints={[{ maxWidth: 600, cols: 1 }, { maxWidth: 1000, cols: 2 }]}
                         >
                             {
-                                articles.map(article =>
+                                articles.map((article: ArticleDto) =>
                                     <UnstyledButton key={article._id} maw={400}>
-                                        <Link to={`/article/${article._id}`} style={{ textDecoration: 'none' }}>
-                                            <Card withBorder shadow='md' radius='md' p='lg'>
-                                                <Card.Section>
-                                                    <Image
-                                                        src={article.images[0]}
-                                                        alt={article.title}
-                                                        width={300}
-                                                        height={300}
-                                                    />
-                                                </Card.Section>
+                                        <Card withBorder shadow='md' radius='md' p='lg'>
+                                            <Card.Section>
+                                                <Carousel slideSize="100%" height={'100%'} slideGap="md" loop withIndicators>
+                                                    {
+                                                        article.images.map((image, index) => (
+                                                            <Carousel.Slide key={index}>
+                                                                <Image
+                                                                    src={image}
+                                                                    alt={article.title}
+                                                                />
+                                                            </Carousel.Slide>
+                                                        ))
+                                                    }
+                                                </Carousel>
+                                            </Card.Section>
+                                            <Link to={`/article/${article._id}`} style={{ textDecoration: 'none' }}>
                                                 <Group position="apart" mt='lg'>
                                                     <Title lineClamp={1} order={4}>{article.title}</Title>
                                                     <Badge color={'pink'}>{article.price} MAD</Badge>
@@ -62,8 +70,8 @@ export default function MyArticles() {
                                                         </div>
                                                     </Group>
                                                 </Card.Section>
-                                            </Card>
-                                        </Link>
+                                            </Link>
+                                        </Card>
                                     </UnstyledButton>
                                 )
                             }

@@ -17,7 +17,8 @@ export const Me = async (req: Request, res: Response) => {
         return res.status(HttpStatusCode.OK).json({
             statusCode: HttpStatusCode.OK,
             message: 'Success',
-            docs: [...articles.map(article => ArticleHelper(article))]
+            docs: articles.map(article => ArticleHelper(article)),
+            totalDocs: articles.length
         } as ServerJsonResponse);
     }
     catch (error) {
