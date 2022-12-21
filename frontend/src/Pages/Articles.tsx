@@ -1,227 +1,134 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-unused-vars */
 import { Layout } from '../Components/Others/Layout';
-import { createStyles, TextInput, ActionIcon, Select, Container, Grid } from '@mantine/core';
+import { createStyles, TextInput, ActionIcon, Select, Container, AppShell, UnstyledButton, Card, Group, Image, Title, Text, Avatar, Badge, ScrollArea, SimpleGrid } from '@mantine/core';
 import { Search, ArrowRight } from 'tabler-icons-react';
-import { useNavigate } from 'react-router-dom';
-import { ArticleCard } from '../Components/Others/Card';
-import { FullLoader } from '../Components/Others/FullLoader';
-
-interface Category {
-    id: number;
-    name: string;
-    image: string | null;
-}
-
-interface Article {
-    id: number;
-    title: string;
-    description: string;
-    category: number;
-    seller: number;
-    condition: string;
-    price: string;
-    quantity: number;
-    is_sold: boolean;
-    city: string;
-    image: string;
-}
+import { useArticles } from '../Hooks/useArticles';
+import { ArticleDto, City } from '../@types';
+import { Link } from 'react-router-dom';
+import { Carousel } from '@mantine/carousel';
 
 const useStyles = createStyles((theme) => ({
-    container: {
-        display: 'flex',
-        alignItems: 'start',
-        marginTop: '6rem',
-        marginBottom: '10rem',
-        flexDirection: 'row',
-        alignContent: 'start',
-        [theme.fn.smallerThan('sm')]: {
-            flexDirection: 'column'
-        }
-
-    }
+    sidebar: {
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.colors.gray[0],
+    },
+    footer: {
+        padding: `${theme.spacing.xs}px ${theme.spacing.lg}px`,
+        marginTop: theme.spacing.md,
+        borderTop: `1px solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]}`,
+    },
 }));
 
 
-
 export default function Articles() {
-
     const { classes } = useStyles();
-    const navigate = useNavigate();
-    const [search, setSearch] = useState<string>('');
-    const [city, setCity] = useState<string>('Casablanca');
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [category, setCategory] = useState<number | null>(0);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [articles, setArticles] = useState<Article[]>([]);
-
-
-
-    useEffect(() => {
-        fetch('/api/categories/')
-            .then(res => res.json())
-            .then(res => {
-                setCategories(res);
-            });
-        fetch('/api/articles/?city=Casablanca')
-            .then(res => res.json())
-            .then(res => {
-                if (res.status !== 200) {
-                    setIsLoading(false);
-                    setArticles([]);
-                    return;
-                }
-                setArticles(res.data);
-                setIsLoading(false);
-            });
-    }, [navigate]);
-
-
-    const HandleSearchByName = () => {
-        setIsLoading(true);
-        fetch(`/api/articles/?title=${search}`)
-            .then(res => res.json())
-            .then(res => {
-                setCategory(0);
-                setCity('');
-                if (res.status !== 200) {
-                    setIsLoading(false);
-                    setArticles([]);
-                    return;
-                }
-                setArticles(res.data);
-                setIsLoading(false);
-            });
-    };
-
-    const HandleSearchByCity = (city: string) => {
-        setIsLoading(true);
-        fetch(`/api/articles/?city=${city}`)
-            .then(res => res.json())
-            .then(res => {
-                setSearch('');
-                setCategory(null);
-                if (res.status !== 200) {
-                    setIsLoading(false);
-                    setArticles([]);
-                    return;
-                }
-                setArticles(res.data);
-                setIsLoading(false);
-            });
-    };
-
-    const HandleSearchByCategory = (category: number) => {
-        setIsLoading(true);
-        fetch(`/api/articles/?category_id=${category}`)
-            .then(res => res.json())
-            .then(res => {
-                setSearch('');
-                setCity('');
-                if (res.status !== 200) {
-                    setIsLoading(false);
-                    setArticles([]);
-                    return;
-                }
-                setArticles(res.data);
-                setIsLoading(false);
-            });
-    };
-
+    const { search, setSearch, city, setCity, categories, setCategories, selectedCategory, setSelectedCategory, isLoading, setIsLoading, articles, setArticles, HandleSearchByName, HandleSearchByCity, HandleSearchByCategory } = useArticles();
 
     return (
         <Layout>
+            <AppShell
+                navbar={
+                    <Container className={classes.sidebar}>
+                        <TextInput
+                            icon={<Search size={18} />}
+                            radius="xl"
+                            size="md"
+                            rightSection={
+                                <ActionIcon size={32} radius="xl" color={'blue'} variant="filled">
+                                    <ArrowRight size={18} />
+                                </ActionIcon>
+                            }
+                            placeholder="Search by name"
+                            rightSectionWidth={42}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') HandleSearchByName();
+                            }}
+                            value={search}
+                            onChange={(e) => {
+                                setSearch(e.target.value);
+                            }}
+                        />
 
-            <Container className={classes.container} size="xl">
+                        <Select
+                            label="City"
+                            placeholder="City"
+                            data={Object.values(City).map(city => { return { value: city, label: city }; })}
+                            value={city}
+                            onChange={(city: string) => {
+                                setCity(city);
+                                HandleSearchByCity(city);
+                            }}
+                            style={{ marginTop: 10 }}
+                        />
 
-                <Container>
-                    <TextInput
-                        icon={<Search size={18} />}
-                        radius="xl"
-                        size="md"
-                        rightSection={
-                            <ActionIcon size={32} radius="xl" color={'blue'} variant="filled">
-                                {<ArrowRight size={18} />}
-                            </ActionIcon>
-                        }
-                        placeholder="Search by name"
-                        rightSectionWidth={42}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') HandleSearchByName();
-                        }}
-                        value={search}
-                        onChange={(e) => {
-                            setSearch(e.target.value);
-                        }}
-                    />
-
-
-                    <Select
-                        label="City"
-                        placeholder="City"
-                        data={[
-                            { value: 'Casablanca', label: 'Casablanca' },
-                            { value: 'Rabat', label: 'Rabat' },
-                            { value: 'Fes', label: 'Fes' },
-                            { value: 'Tanger', label: 'Tanger' },
-                            { value: 'Oujda', label: 'Oujda' },
-                            { value: 'Agadir', label: 'Agadir' },
-                            { value: 'Tetouan', label: 'Tetouan' },
-                            { value: 'Meknes', label: 'Meknes' },
-                            { value: 'Safi', label: 'Safi' },
-                            { value: 'El Jadida', label: 'El Jadida' },
-                            { value: 'Khouribga', label: 'Khouribga' },
-                            { value: 'Ouarzazate', label: 'Ouarzazate' },
-                            { value: 'Settat', label: 'Settat' },
-                            { value: 'Sidi Kacem', label: 'Sidi Kacem' },
-                            { value: 'Kenitra', label: 'Kenitra' },
-                            { value: 'Taza', label: 'Taza' },
-                            { value: 'Tiznit', label: 'Tiznit' },
-                            { value: 'Sidi Ifni', label: 'Sidi Ifni' },
-                        ]}
-                        value={city}
-                        onChange={(city: string) => {
-                            setCity(city);
-                            HandleSearchByCity(city);
-                        }}
-                        style={{ marginTop: 10 }}
-                    />
-
-                    <Select
-                        label="Category"
-                        placeholder="Category"
-                        data={categories.map(category => { return { value: category.id as unknown as string, label: category.name }; })}
-                        value={category as unknown as string}
-                        onChange={(cat: string) => {
-                            setCategory(cat as unknown as number);
-                            HandleSearchByCategory(cat as unknown as number);
-                        }}
-                        style={{ marginTop: 10 }}
-                    />
-                </Container>
-                <Container size={'xl'} style={{width: '100%'}} >
-                    <Grid style={{marginTop: 20}}>
-                        {isLoading ? <FullLoader /> :
-                            articles.map(article => (
-                                <Grid.Col xl={4}>
-                                    <ArticleCard {...{
-                                        id: article.id,
-                                        image: article.image ? `https://catchit.fra1.digitaloceanspaces.com/${article.image.split('/')[3]}/${article.image.split('/')[4]}` : 'https://catchit.fra1.digitaloceanspaces.com/assets/no_image.png',
-                                        title: article.title,
-                                        link: '/article/?id=' + article.id,
-                                        author: {
-                                            name: '',
-                                            description: '',
-                                            image: ''
-                                        }
-                                    }}
-
-                                    />
-                                </Grid.Col>
-                            ))
-                        }
-                    </Grid>
-                </Container>
-            </Container>
+                        <Select
+                            label="Category"
+                            placeholder="Category"
+                            data={categories.map(category => { return { value: category._id, label: category.name }; })}
+                            value={selectedCategory}
+                            onChange={(cat: string) => {
+                                setSelectedCategory(cat);
+                                HandleSearchByCategory(cat);
+                            }}
+                            style={{ marginTop: 10 }}
+                        />
+                    </Container>
+                }
+            >
+                <ScrollArea style={{ height: window.innerHeight - 150 }}>
+                    <Container size={'xl'} style={{ width: '100%' }} >
+                        <SimpleGrid
+                            cols={3}
+                            spacing="lg"
+                            breakpoints={[{ maxWidth: 600, cols: 1 }, { maxWidth: 1000, cols: 2 }]}
+                        >
+                            {
+                                articles.map((article: ArticleDto) =>
+                                    <UnstyledButton key={article._id} maw={400}>
+                                        <Card withBorder shadow='md' radius='md' p='lg'>
+                                            <Card.Section>
+                                                <Carousel slideSize="100%" height={'100%'} slideGap="md" loop withIndicators>
+                                                    {
+                                                        article.images.map((image, index) => (
+                                                            <Carousel.Slide key={index}>
+                                                                <Image
+                                                                    src={image}
+                                                                    alt={article.title}
+                                                                />
+                                                            </Carousel.Slide>
+                                                        ))
+                                                    }
+                                                </Carousel>
+                                            </Card.Section>
+                                            <Link to={`/article/${article._id}`} style={{ textDecoration: 'none' }}>
+                                                <Group position="apart" mt='lg'>
+                                                    <Title lineClamp={1} order={4}>{article.title}</Title>
+                                                    <Badge color={'pink'}>{article.price} MAD</Badge>
+                                                </Group>
+                                                <Text size="sm" color="dimmed" mt='md'>
+                                                    {article.description}
+                                                </Text>
+                                                <Card.Section className={classes.footer}>
+                                                    <Group mt='xs'>
+                                                        <Avatar src={article.seller.image} radius='sm' />
+                                                        <div>
+                                                            <Text size="xs" color="dimmed">
+                                                                {article.seller.firstName} {article.seller.lastName}
+                                                            </Text>
+                                                            <Text size="xs" color="dimmed">
+                                                                {article.seller.email}
+                                                            </Text>
+                                                        </div>
+                                                    </Group>
+                                                </Card.Section>
+                                            </Link>
+                                        </Card>
+                                    </UnstyledButton>
+                                )
+                            }
+                        </SimpleGrid>
+                    </Container>
+                </ScrollArea>
+            </AppShell>
         </Layout>
     );
 }
