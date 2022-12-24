@@ -1,7 +1,24 @@
-/* eslint-disable no-unused-vars */
 import { Layout } from '../Components/Others/Layout';
-import { createStyles, TextInput, ActionIcon, Select, Container, AppShell, UnstyledButton, Card, Group, Image, Title, Text, Avatar, Badge, ScrollArea, SimpleGrid } from '@mantine/core';
-import { Search, ArrowRight } from 'tabler-icons-react';
+import {
+    createStyles,
+    TextInput,
+    Select,
+    Container,
+    AppShell,
+    UnstyledButton,
+    Card,
+    Group,
+    Image, Title,
+    Text,
+    Avatar,
+    Badge,
+    ScrollArea,
+    SimpleGrid,
+    MediaQuery,
+    Button,
+    LoadingOverlay
+} from '@mantine/core';
+import { Search, X } from 'tabler-icons-react';
 import { useArticles } from '../Hooks/useArticles';
 import { ArticleDto, City } from '../@types';
 import { Link } from 'react-router-dom';
@@ -21,57 +38,83 @@ const useStyles = createStyles((theme) => ({
 
 export default function Articles() {
     const { classes } = useStyles();
-    const { search, setSearch, city, setCity, categories, setCategories, selectedCategory, setSelectedCategory, isLoading, setIsLoading, articles, setArticles, HandleSearchByName, HandleSearchByCity, HandleSearchByCategory } = useArticles();
+    const {
+        isLoading,
+        search,
+        selectedCity,
+        selectedCategory,
+        setSearch,
+        setSelectedCity,
+        setSelectedCategory,
+        articles,
+        categories,
+        HandleSearch,
+        HandleLoadMore,
+        hasNextPage
+    } = useArticles();
 
     return (
-        <Layout>
+        <Layout hideFooter>
+            <LoadingOverlay visible={isLoading} />
             <AppShell
                 navbar={
-                    <Container className={classes.sidebar}>
-                        <TextInput
-                            icon={<Search size={18} />}
-                            radius="xl"
-                            size="md"
-                            rightSection={
-                                <ActionIcon size={32} radius="xl" color={'blue'} variant="filled">
-                                    <ArrowRight size={18} />
-                                </ActionIcon>
-                            }
-                            placeholder="Search by name"
-                            rightSectionWidth={42}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') HandleSearchByName();
-                            }}
-                            value={search}
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                            }}
-                        />
+                    <MediaQuery smallerThan='sm' styles={{ display: 'none' }}>
+                        <Container className={classes.sidebar}>
+                            <TextInput
+                                icon={<Search size={18} />}
+                                radius="xl"
+                                size="md"
+                                placeholder="Search by name"
+                                rightSectionWidth={42}
+                                value={search}
+                                onChange={(e) => {
+                                    setSearch(e.target.value);
+                                }}
+                            />
 
-                        <Select
-                            label="City"
-                            placeholder="City"
-                            data={Object.values(City).map(city => { return { value: city, label: city }; })}
-                            value={city}
-                            onChange={(city: string) => {
-                                setCity(city);
-                                HandleSearchByCity(city);
-                            }}
-                            style={{ marginTop: 10 }}
-                        />
+                            <Select
+                                label="City"
+                                placeholder="City"
+                                data={Object.values(City).map(city => { return { value: city, label: city }; })}
+                                value={selectedCity}
+                                onChange={(city: string) => {
+                                    setSelectedCity(city);
+                                }}
+                                mt='md'
+                            />
 
-                        <Select
-                            label="Category"
-                            placeholder="Category"
-                            data={categories.map(category => { return { value: category._id, label: category.name }; })}
-                            value={selectedCategory}
-                            onChange={(cat: string) => {
-                                setSelectedCategory(cat);
-                                HandleSearchByCategory(cat);
-                            }}
-                            style={{ marginTop: 10 }}
-                        />
-                    </Container>
+                            <Select
+                                label="Category"
+                                placeholder="Category"
+                                data={categories.map(category => { return { value: category._id, label: category.name }; })}
+                                value={selectedCategory}
+                                onChange={(cat: string) => {
+                                    setSelectedCategory(cat);
+                                }}
+                                mt='md'
+                            />
+                            <Button
+                                fullWidth
+                                variant="outline"
+                                color="teal"
+                                mt='xl'
+                                onClick={HandleSearch}
+                                leftIcon={<Search size={18} />}
+                            >
+                                Search
+                            </Button>
+                            <Button
+                                fullWidth
+                                variant='outline'
+                                color='red'
+                                mt='xl'
+                                onClick={() => document.location.reload()}
+                                leftIcon={<X size={18} />}
+                            >
+                                Reset
+                            </Button>
+                        </Container>
+                    </MediaQuery>
                 }
             >
                 <ScrollArea style={{ height: window.innerHeight - 150 }}>
@@ -83,7 +126,7 @@ export default function Articles() {
                         >
                             {
                                 articles.map((article: ArticleDto) =>
-                                    <UnstyledButton key={article._id} maw={400}>
+                                    <UnstyledButton key={article._id} maw={400} mah={600} style={{height: 600}} mt='xl' mb='xl'>
                                         <Card withBorder shadow='md' radius='md' p='lg'>
                                             <Card.Section>
                                                 <Carousel slideSize="100%" height={'100%'} slideGap="md" loop withIndicators>
@@ -104,7 +147,7 @@ export default function Articles() {
                                                     <Title lineClamp={1} order={4}>{article.title}</Title>
                                                     <Badge color={'pink'}>{article.price} MAD</Badge>
                                                 </Group>
-                                                <Text size="sm" color="dimmed" mt='md'>
+                                                <Text size="sm" color="dimmed" mt='md' lineClamp={3}>
                                                     {article.description}
                                                 </Text>
                                                 <Card.Section className={classes.footer}>
@@ -126,6 +169,17 @@ export default function Articles() {
                                 )
                             }
                         </SimpleGrid>
+                        <Button
+                            fullWidth
+                            variant="outline"
+                            color="teal"
+                            mt='xl'
+                            onClick={HandleLoadMore}
+                            leftIcon={<Search size={18} />}
+                            disabled={!hasNextPage}
+                        >
+                            Load More
+                        </Button>
                     </Container>
                 </ScrollArea>
             </AppShell>

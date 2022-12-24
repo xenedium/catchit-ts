@@ -30,8 +30,9 @@ export const GetOne = async (req: Request, res: Response) => {
 };
 
 export const GetMany = async (req: Request, res: Response) => {
-    const { category, seller, city, limit, page } = req.query;
+    const { category, seller, city, limit, page, search } = req.query;
     const query: any = {};
+    if (search) query.title = { $regex: search, $options: 'i' };
     if (category) query.category = category;
     if (seller) query.seller = seller;
     if (city) query.city = city;

@@ -131,6 +131,7 @@ export default function ArticlePage() {
                                     <Container>
                                         <Image
                                             src={article.seller.image}
+                                            radius='xl'
                                         />
                                         <Text>
                                             <Text weight={700}>Name: </Text>{article.seller.firstName} {article.seller.lastName}

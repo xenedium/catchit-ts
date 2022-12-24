@@ -8,6 +8,8 @@ export interface HeaderTabsProps {
 }
 
 export type LayoutProps = {
+    hideHeader?: boolean;
+    hideFooter?: boolean;
     children: React.ReactNode;
 };
 

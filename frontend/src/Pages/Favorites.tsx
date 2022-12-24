@@ -61,7 +61,7 @@ export default function Favorites() {
                         >
                             {
                                 articles.map(article =>
-                                    <UnstyledButton key={article._id} maw={400}>
+                                    <UnstyledButton key={article._id} maw={400} mah={600} style={{height: 600}} mt='xl' mb='xl'>
                                         <Link to={`/article/${article._id}`} style={{ textDecoration: 'none' }}>
                                             <Card withBorder shadow='md' radius='md' p='lg'>
                                                 <Card.Section>
@@ -76,7 +76,7 @@ export default function Favorites() {
                                                     <Title lineClamp={1} order={4}>{article.title}</Title>
                                                     <Badge color={'pink'}>{article.price} MAD</Badge>
                                                 </Group>
-                                                <Text size="sm" color="dimmed" mt='md'>
+                                                <Text size="sm" color="dimmed" mt='md'lineClamp={3}>
                                                     {article.description}
                                                 </Text>
                                                 <Card.Section className={classes.footer}>

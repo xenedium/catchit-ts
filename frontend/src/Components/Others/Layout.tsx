@@ -6,7 +6,7 @@ import { AppShell } from '@mantine/core';
 import { useEffect, useState } from 'react';
 
 
-export const Layout = ({ children }: LayoutProps) => {
+export const Layout = ({ children, hideHeader, hideFooter }: LayoutProps) => {
     const {
         userData,
         loading
@@ -20,13 +20,17 @@ export const Layout = ({ children }: LayoutProps) => {
     return (
         <AppShell
             header={
-                <HeaderTabsColored user={{
-                    name: loading ? 'Loading' : userData?.firstName ?? 'Sign In',
-                    image: userData?.image ?? 'https://cdn.catchit.shop/static/default-user-profile.jpg',
-                }} />
+                hideHeader ? <></> :
+                    <HeaderTabsColored
+                        user={{
+                            name: loading ? 'Loading' : userData?.firstName ?? 'Sign In',
+                            image: userData?.image ?? 'https://cdn.catchit.shop/static/default-user-profile.jpg',
+                        }}
+                    />
             }
             footer={
-                <FooterCentered links={footerLinks.links} />
+                hideFooter ? <></> :
+                    <FooterCentered links={footerLinks.links} />
             }
             styles={{ main: { minHeight: innerHeight - 165 } }}
         >
