@@ -40,5 +40,6 @@ RUN yarn build
 RUN rm -rf ./frontend ./src
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["doppler", "run", "--", "/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
