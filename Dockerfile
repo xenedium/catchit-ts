@@ -18,9 +18,6 @@ COPY nginx/default.conf /etc/nginx/sites-available/default
 # Copy supervisor config
 COPY supervisord/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Check nginx config
-RUN nginx -t
-
 # Install React dependencies
 RUN mkdir ./frontend
 COPY frontend/package.json ./frontend
