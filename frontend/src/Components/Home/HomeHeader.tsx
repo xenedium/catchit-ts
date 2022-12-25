@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createStyles, Container, Avatar, UnstyledButton, Group, Text, Menu, Image } from '@mantine/core';
-import { Logout, Settings, ShoppingCart, ShoppingCartOff, ChevronDown, Heart, Plus } from 'tabler-icons-react';
+import { Logout, Settings, ShoppingCart, ShoppingCartOff, ChevronDown, Heart, Plus, UserPlus } from 'tabler-icons-react';
 import CatchItLogo from '../../Assets/Images/CatchItLogo.jpeg';
 import { useNavigate, Link } from 'react-router-dom';
 import type { HeaderTabsProps } from '../../@types';
@@ -145,6 +145,13 @@ export function HeaderTabsColored({ user }: HeaderTabsProps) {
                                             <Menu.Item icon={<Logout size={14} />} >Sign In</Menu.Item>
                                         </Link> :
                                         <Menu.Item icon={<Logout size={14} />} onClick={() => HandleLogout()}>Log Out</Menu.Item>
+                                }
+                                {
+                                    user.name === 'Sign In' ?
+                                        <Link to='/register' className={classes.link}>
+                                            <Menu.Item icon={<UserPlus size={14} />} >Sign Up</Menu.Item>
+                                        </Link> :
+                                        <></>
                                 }
                             </Menu.Dropdown>
                         </Menu>

@@ -15,7 +15,7 @@ export default function MyAccount() {
     const [oldPassword, setOldPassword] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-    const { userData, loading, error, setUserData, updateUserData, updatePassword, updateImage, setError } = useUserData();
+    const { userData, loading, dialogMessage, setUserData, updateUserData, updatePassword, updateImage, setDialogMessage } = useUserData();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,13 +28,13 @@ export default function MyAccount() {
                 !loading && userData &&
                 <>
                     <Dialog
-                        opened={error !== undefined}
+                        opened={dialogMessage !== undefined}
                         withCloseButton
-                        onClose={() => setError(undefined)}
+                        onClose={() => setDialogMessage(undefined)}
                         size="lg"
                         radius="md"
                     >
-                        <Text>{error}</Text>
+                        <Text>{dialogMessage}</Text>
                     </Dialog>
                     <LoadingOverlay visible={loading} />
                     <Container>

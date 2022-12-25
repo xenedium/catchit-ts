@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 export const useUserData = () => {
     const [userData, setUserData] = useState<UserDto | undefined>(undefined);
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | undefined>(undefined);
+    const [dialogMessage, setDialogMessage] = useState<string | undefined>(undefined);
 
     useEffect(() => {
         const fetchUserData = async () => {
@@ -30,12 +30,16 @@ export const useUserData = () => {
             },
             { validateStatus: () => true, withCredentials: true }
         );
-        if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(`Invalid fields: ${response.errors?.toString()}`);
+        if (response.statusCode === HttpStatusCode.OK) {
+            setUserData(response.user);
+            setDialogMessage('✅ User data updated');
+        }
+        else setDialogMessage(`Invalid fields: ${response.errors?.toString()}`);
+        setTimeout(() => setDialogMessage(undefined), 3000);
     };
     const updatePassword = async (oldPassword: string, newPassword: string, newPasswordConfirm: string) => {
         if (newPassword !== newPasswordConfirm) return;
-        if (!newPassword || !oldPassword) return setError('Invalid fields: password');
+        if (!newPassword || !oldPassword) return setDialogMessage('❌ Invalid fields: password');
         const { data: response } = await axios.put<ServerJsonResponse>('/api/user',
             {
                 oldPassword,
@@ -43,8 +47,12 @@ export const useUserData = () => {
             },
             { validateStatus: () => true, withCredentials: true }
         );
-        if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(`Invalid fields: ${response.errors?.toString()}`);
+        if (response.statusCode === HttpStatusCode.OK) {
+            setUserData(response.user);
+            setDialogMessage('✅ Password updated');
+        }
+        else setDialogMessage(`❌ Invalid fields: ${response.errors?.toString()}`);
+        setTimeout(() => setDialogMessage(undefined), 3000);
     };
     const updateImage = async (image: File) => {
         const formData = new FormData();
@@ -53,9 +61,13 @@ export const useUserData = () => {
             formData,
             { validateStatus: () => true, withCredentials: true }
         );
-        if (response.statusCode === HttpStatusCode.OK) window.location.reload();
-        else setError(`Invalid fields: ${response.errors?.toString()}`);
+        if (response.statusCode === HttpStatusCode.OK) {
+            setUserData(response.user);
+            setDialogMessage('✅ Profile picture updated');
+        }
+        else setDialogMessage(`❌ Invalid fields: ${response.errors?.toString()}`);
+        setTimeout(() => setDialogMessage(undefined), 3000);
     };
 
-    return { userData, loading, setUserData, updateUserData, updatePassword, updateImage, error, setError };
+    return { userData, loading, setUserData, updateUserData, updatePassword, updateImage, dialogMessage, setDialogMessage };
 };
