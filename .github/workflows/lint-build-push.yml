@@ -59,4 +59,4 @@ jobs:
           docker container rm catchit-node-nginx || echo "Container does not exist. Skipping..."
           docker rmi registry.digitalocean.com/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/catchit-node-nginx:current || echo "Image does not exist. Skipping..."
           docker tag registry.digitalocean.com/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/catchit-node-nginx:latest registry.digitalocean.com/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/catchit-node-nginx:current
-          docker run -d --restart always --name catchit-node-nginx -v /etc/letsencrypt/live/catchit.shop -p 80:80 -p 443:443 -e DOPPLER_TOKEN="${{ secrets.DOPPLER_SERVICE_TOKEN }}" registry.digitalocean.com/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/catchit-node-nginx:current
+          docker run -d --restart always --name catchit-node-nginx -p 80:80 -p 443:443 -e DOPPLER_TOKEN="${{ secrets.DOPPLER_SERVICE_TOKEN }}" --mount type=bind,source=/etc/letsencrypt/live/catchit.shop/,target=/etc/letsencrypt/live/catchit.shop registry.digitalocean.com/${{ secrets.DIGITALOCEAN_REGISTRY_NAME }}/catchit-node-nginx:current
