@@ -31,7 +31,7 @@ export const Register = async (req: Request, res: Response) => {
         await user.validate();
     }
     catch (err) {
-        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper(err));
+        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper({err}));
     }
     try {
         await user.save();

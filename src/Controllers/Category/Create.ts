@@ -18,7 +18,7 @@ export const Create = async (req: Request, res: Response) => {
         await category.validate();
     }
     catch (error) {
-        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper(error));
+        return res.status(HttpStatusCode.BAD_REQUEST).json(BadRequestHelper({err: error}));
     }
 
     try {

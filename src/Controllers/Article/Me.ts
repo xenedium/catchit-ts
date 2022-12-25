@@ -1,7 +1,6 @@
 import type { Request, Response } from 'express';
 import type { ServerJsonResponse } from '../../@types';
-import { InternalServerErrorHelper } from '../../@types/Helpers';
-import { ArticleHelper } from '../../@types/Helpers/ArticleHelper';
+import { InternalServerErrorHelper, ArticleHelper } from '../../@types/Helpers';
 import { HttpStatusCode } from '../../@types/HttpStatusCode';
 import { Article } from '../../Models';
 
