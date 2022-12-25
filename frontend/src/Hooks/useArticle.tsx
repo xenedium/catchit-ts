@@ -29,13 +29,10 @@ export const useArticle = () => {
 
     const HandleMarkAsSold = async () => {
         const { data } = await axios.put<ServerJsonResponse>(`/api/article/${id}`, { isSold: !article?.isSold }, { withCredentials: true, validateStatus: () => true });
-        if (data.statusCode !== HttpStatusCode.NO_CONTENT) return navigate('/FourOhFour');
-        window.location.reload();
+        if (data.statusCode !== HttpStatusCode.OK) return navigate('/FourOhFour');
+        setArticle(data.doc);
     };
 
-    const HandleEditArticle = () => {
-        navigate(`/edit-article/${article?._id}`);
-    };
 
 
     return {
@@ -47,6 +44,5 @@ export const useArticle = () => {
         setIsDialogOpen,
         setIsModalOpen,
         HandleMarkAsSold,
-        HandleEditArticle
     };
 };

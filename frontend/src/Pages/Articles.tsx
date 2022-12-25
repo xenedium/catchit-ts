@@ -126,7 +126,7 @@ export default function Articles() {
                         >
                             {
                                 articles.map((article: ArticleDto) =>
-                                    <UnstyledButton key={article._id} maw={400} mah={600} style={{height: 600}} mt='xl' mb='xl'>
+                                    <UnstyledButton key={article._id} maw={400} mah={600} mt='xl' mb='xl'>
                                         <Card withBorder shadow='md' radius='md' p='lg'>
                                             <Card.Section>
                                                 <Carousel slideSize="100%" height={'100%'} slideGap="md" loop withIndicators>

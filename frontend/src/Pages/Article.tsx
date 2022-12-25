@@ -4,6 +4,7 @@ import { useLocalStorage } from '@mantine/hooks';
 import { Check, Heart, Pencil, UserCircle } from 'tabler-icons-react';
 import { useArticle } from '../Hooks/useArticle';
 import { Carousel } from '@mantine/carousel';
+import { Link } from 'react-router-dom';
 
 
 const useStyles = createStyles((theme) => ({
@@ -21,7 +22,7 @@ const useStyles = createStyles((theme) => ({
 
 export default function ArticlePage() {
     const { classes } = useStyles();
-    const { loading, article, isModalOpen, isDialogOpen, isArticleOwner, setIsModalOpen, setIsDialogOpen } = useArticle();
+    const { loading, article, isModalOpen, isDialogOpen, isArticleOwner, setIsModalOpen, setIsDialogOpen, HandleMarkAsSold } = useArticle();
     const [favorites, setFavorites] = useLocalStorage<string[]>({
         key: 'favorites',
         defaultValue: [],
@@ -84,7 +85,7 @@ export default function ArticlePage() {
                                     <Button
                                         fullWidth
                                         color={'red'}
-                                        onClick={() => { }}
+                                        onClick={HandleMarkAsSold}
                                         leftIcon={<Check />}
                                     >
                                         {article.isSold ? 'Mark as available' : 'Mark as sold'}
@@ -92,15 +93,16 @@ export default function ArticlePage() {
                                 }
                                 {
                                     isArticleOwner &&
-                                    <Button
-                                        leftIcon={<Pencil />}
-                                        style={{ marginTop: 10 }}
-                                        fullWidth
-                                        color={'red'}
-                                        onClick={() => { }}
-                                    >
-                                        Edit article
-                                    </Button>
+                                    <Link to={`/edit-article/${article._id}`} style={{ textDecoration: 'none' }} >
+                                        <Button
+                                            leftIcon={<Pencil />}
+                                            style={{ marginTop: 10 }}
+                                            fullWidth
+                                            color={'red'}
+                                        >
+                                            Edit article
+                                        </Button>
+                                    </Link>
                                 }
                                 <Button
                                     style={{ marginTop: 10 }}
