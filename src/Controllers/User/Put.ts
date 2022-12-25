@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { HttpStatusCode, ServerJsonResponse } from '../../@types';
 import { pbkdf2Sync } from 'crypto';
-import { BadRequestHelper, InternalServerErrorHelper } from '../../@types/Helpers';
+import { BadRequestHelper, InternalServerErrorHelper, UserHelper } from '../../@types/Helpers';
 
 
 export const Put = async (req: Request, res: Response) => {
@@ -37,5 +37,6 @@ export const Put = async (req: Request, res: Response) => {
     return res.status(HttpStatusCode.OK).json({
         statusCode: HttpStatusCode.OK,
         message: 'User updated successfully',
+        user: UserHelper(req.user)
     } as ServerJsonResponse);
 };
