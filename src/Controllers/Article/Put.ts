@@ -28,7 +28,7 @@ export const Update = async (req: Request, res: Response) => {
     article.city = city ?? article.city;
     article.isSold = isSold ?? article.isSold;
 
-    if (images.length > 0) {
+    if (images?.length > 0) {
         article.images = images.map((image) => S3LocationHelper(image));
     }
 
