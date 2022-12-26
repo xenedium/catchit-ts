@@ -12,7 +12,7 @@
     "include": [
         "src/**/*"
     ],
-    // For overriding Express types
+    // For overriding Express types (Adding the IUser in the Request object)
     "files": [
         "src/@types/custom.d.ts"
     ]
