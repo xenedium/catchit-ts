@@ -16,7 +16,7 @@ export const Create = async (req: Request, res: Response) => {
         quantity,
         city,
         seller: req.user._id,
-        images: images.map((image) => S3LocationHelper(image)),
+        images: images.length > 0 ? images.map((image) => S3LocationHelper(image)) : undefined,
     });
 
     try {
