@@ -55,7 +55,7 @@ export default function AddArticle() {
                 <Container>
                     <Container className={classes.container} mt='xl'>
                         <Container>
-                            <Title order={2}>Edit article: </Title>
+                            <Title order={2}>Add article: </Title>
                             <Space h="xs" />
                             <TextInput
                                 label="Title"
