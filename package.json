@@ -4,7 +4,7 @@
   "author": "xenedium",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon",
+    "dev": "doppler run -- nodemon || nodemon",
     "build:client": "cd frontend && yarn build && mkdir -p ../dist && cp -r build ../dist/public",
     "build:server": "tsc",
     "build": "yarn build:client && yarn build:server",
