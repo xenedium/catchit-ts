@@ -62,7 +62,7 @@ export default function Favorites() {
                             {
                                 articles.map(article =>
                                     <UnstyledButton key={article._id} maw={400} mah={600} mt='xl' mb='xl'>
-                                        <Link to={`/article/${article._id}`}>
+                                        <Link to={`/article/${article._id}`} style={{textDecoration: 'none'}}>
                                             <Card withBorder shadow='md' radius='md' p='lg'>
                                                 <Card.Section>
                                                     <Image

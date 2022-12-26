@@ -129,7 +129,7 @@ export default function Articles() {
                                     <UnstyledButton key={article._id} maw={400} mah={600} mt='xl' mb='xl'>
                                         <Card withBorder shadow='md' radius='md' p='lg'>
                                             <Card.Section>
-                                                <Carousel w={300} slideGap="md" withIndicators loop>
+                                                <Carousel slideGap="md" withIndicators loop>
                                                     {
                                                         article.images.map((image, index) => (
                                                             <Carousel.Slide key={index}>

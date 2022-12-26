@@ -45,15 +45,13 @@ export default function ArticlePage() {
                 <Container style={{ marginTop: 40, marginBottom: 40 }}>
                     <Container className={classes.container}>
                         <Container>
-                            <Carousel w={300} slideGap="md" withIndicators loop>
+                            <Carousel slideGap="md" withIndicators loop>
                                 {
                                     article.images.map((image, index) => (
                                         <Carousel.Slide key={index}>
                                             <Image
                                                 src={image}
                                                 alt="Article image"
-                                                width={300}
-                                                height={300}
                                             />
                                         </Carousel.Slide>
                                     ))
