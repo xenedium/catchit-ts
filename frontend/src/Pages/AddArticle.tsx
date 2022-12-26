@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
 import { Layout } from '../Components/Others/Layout';
-import { useNavigate } from 'react-router-dom';
-import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog } from '@mantine/core';
-import { Edit, Plus } from 'tabler-icons-react';
-import type { CategoryDto } from '../@types';
+import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog, FileButton, LoadingOverlay } from '@mantine/core';
+import { Edit } from 'tabler-icons-react';
+import { City } from '../@types';
+import { Carousel } from '@mantine/carousel';
+import { useAddArticle } from '../Hooks/useAddArticle';
 
-// Evil Is Evil. Lesser, Greater, Middling, Makes No Difference.
-// The Degree Is Arbitrary, The Definitions Blurred.
-// If I'm To Choose Between One Evil And Another, I'd Rather Not Choose At All.
-// ― Andrzej Sapkowski, The Last Wish
 
 const useStyles = createStyles((theme) => ({
     container: {
         display: 'flex',
         alignItems: 'center',
-        marginTop: '6rem',
         marginBottom: '10rem',
         flexDirection: 'row',
         [theme.fn.smallerThan('sm')]: {
@@ -24,215 +19,161 @@ const useStyles = createStyles((theme) => ({
 }));
 
 
-
 export default function AddArticle() {
 
+    const {
+        title,
+        setTitle,
+        description,
+        setDescription,
+        category,
+        setCategory,
+        condition,
+        setCondition,
+        price,
+        setPrice,
+        quantity,
+        setQuantity,
+        city,
+        setCity,
+        loading,
+        categories,
+        images,
+        setImages,
+        HandleUpload,
+        error,
+        modalMessage,
+        setModalMessage,
+        setError
+    } = useAddArticle();
     const { classes } = useStyles();
-    const navigate = useNavigate();
-    const [title, setTitle] = useState<string>('');
-    const [description, setDescription] = useState<string>('');
-    const [category, setCategory] = useState<number>(0);
-    const [condition, setCondition] = useState<string>('');
-    const [price, setPrice] = useState<string>('');
-    const [quantity, setQuantity] = useState<number>(0);
-    const [city, setCity] = useState<string>('');
-    const [isImagePicked, setIsImagePicked] = useState<boolean>(false);
-    const [image, setImage] = useState<any>();
-    const [imgBuffer, setImgBuffer] = useState<string>();
-    const [error, setError] = useState<boolean>(false);
-
-    const [categories, setCategories] = useState<CategoryDto[]>([]);
-
-
-    useEffect(() => {
-        const token: string | undefined = localStorage.getItem('token')?.split(' ')[1];
-
-        if (!token) navigate('/login');
-
-        fetch('/api/validate-jwt', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(res => res.json())
-            .then(res => {
-                if (res.status !== 200) {
-                    localStorage.removeItem('token');
-                    navigate('/login');
-                }
-                else {
-                    fetch('/api/categories/')
-                        .then(res => res.json())
-                        .then(res => {
-                            setCategories(res);
-                        });
-                }
-            });
-    }, [navigate]);
-
-    const HandleUpload = () => {
-        let formData = new FormData();
-        if (image) {
-            formData.append('image', image);
-        }
-        formData.append('title', title);
-        formData.append('description', description);
-        formData.append('category', category as unknown as string);
-        formData.append('condition', condition);
-        formData.append('price', price);
-        formData.append('quantity', quantity as unknown as string);
-        formData.append('city', city);
-
-        fetch('/api/articles/', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')?.split(' ')[1]}`
-            },
-            body: formData
-        })
-            .then(res => res.json())
-            .then(res => {
-                if ( res.status === 201 ) {
-                    navigate(`/article/?id=${res.article.id}`);
-                }
-                else {
-                    setError(true);
-                }
-            });
-
-    };
 
     return (
         <Layout>
-            <Container>
-                <Container className={classes.container}>
-                    <Container>
-                        <Title order={2} >Add a new article: </Title>
-                        <Space h="xs" />
-                        <TextInput
-                            label="Title"
-                            placeholder="Title"
-                            required
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            error={error}
-                        />
-                        <Textarea
-                            style={{ width: 300 }}
-                            label="Description"
-                            placeholder="Description"
-                            required
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            error={error}
-                        />
-                        <Select
-                            label="Category"
-                            placeholder="Category"
-                            required
-                            data={categories.map(category => { return { value: category._id, label: category.name }; })}
-                            value={category as unknown as string}
-                            onChange={(cat: string) => setCategory(cat as unknown as number)}
-                            error={error}
-                        />
-                        <Select
-                            label="Condition"
-                            placeholder="Condition"
-                            required
-                            data={[
-                                { value: 'New', label: 'New' },
-                                { value: 'Used', label: 'Used' },
-                            ]}
-                            value={condition}
-                            onChange={(cond: string) => setCondition(cond)}
-                            error={error}
-                        />
-                        <TextInput
-                            label="Price"
-                            placeholder="Price"
-                            required
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            error={error}
-                        />
-                        <TextInput
-                            label="Quantity"
-                            placeholder="Quantity"
-                            required
-                            value={quantity as unknown as string}
-                            onChange={(e) => {
-                                if (Number(e.target.value)) setQuantity(Number(e.target.value));
-                                if (e.target.value === '') setQuantity(0);
-                            }}
-                            error={error}
-                        />
-                        <Select
-                            label="City"
-                            placeholder="City"
-                            required
-                            data={[
-                                { value: 'Casablanca', label: 'Casablanca' },
-                                { value: 'Rabat', label: 'Rabat' },
-                                { value: 'Fes', label: 'Fes' },
-                                { value: 'Tanger', label: 'Tanger' },
-                                { value: 'Oujda', label: 'Oujda' },
-                                { value: 'Agadir', label: 'Agadir' },
-                                { value: 'Tetouan', label: 'Tetouan' },
-                                { value: 'Meknes', label: 'Meknes' },
-                                { value: 'Safi', label: 'Safi' },
-                                { value: 'El Jadida', label: 'El Jadida' },
-                                { value: 'Khouribga', label: 'Khouribga' },
-                                { value: 'Ouarzazate', label: 'Ouarzazate' },
-                                { value: 'Settat', label: 'Settat' },
-                                { value: 'Sidi Kacem', label: 'Sidi Kacem' },
-                                { value: 'Kenitra', label: 'Kenitra' },
-                                { value: 'Taza', label: 'Taza' },
-                                { value: 'Tiznit', label: 'Tiznit' },
-                                { value: 'Sidi Ifni', label: 'Sidi Ifni' },
-                            ]}
-                            value={city}
-                            onChange={(city: string) => setCity(city)}
-                            error={error}
-                        />
-                        <Space h="xl" />
-                        <Button
-                            fullWidth
-                            onClick={HandleUpload}
-                            leftIcon={<Plus />}
-                        >
+            <LoadingOverlay visible={loading} />
+            {
+                <Container>
+                    <Container className={classes.container} mt='xl'>
+                        <Container>
+                            <Title order={2}>Edit article: </Title>
+                            <Space h="xs" />
+                            <TextInput
+                                label="Title"
+                                placeholder="Title"
+                                required
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                error={error}
+                            />
+                            <Textarea
+                                style={{ width: 300 }}
+                                label="Description"
+                                placeholder="Description"
+                                required
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                error={error}
+                                autosize
+                                minRows={2}
+                                maxRows={4}
+                            />
+                            <Select
+                                label="Category"
+                                placeholder="Category"
+                                required
+                                data={categories.map(category => { return { value: category._id as unknown as string, label: category.name }; })}
+                                value={category?._id}
+                                onChange={(cat: string) => {
+                                    const category = categories.find(category => category._id === cat);
+                                    if (category) setCategory(category);
+                                }}
+                                error={error}
+                            />
+                            <Select
+                                label="Condition"
+                                placeholder="Condition"
+                                required
+                                data={[
+                                    { value: 'New', label: 'New' },
+                                    { value: 'Used', label: 'Used' },
+                                ]}
+                                value={condition}
+                                onChange={(cond: string) => setCondition(cond)}
+                                error={error}
+                            />
+                            <TextInput
+                                label="Price"
+                                placeholder="Price"
+                                required
+                                value={price}
+                                onChange={(e) => setPrice(Number(e.target.value) || 0)}
+                                error={error}
+                            />
+                            <TextInput
+                                label="Quantity"
+                                placeholder="Quantity"
+                                required
+                                value={quantity}
+                                onChange={(e) => setQuantity(Number(e.target.value) || 0)}
+                                error={error}
+                            />
+                            <Select
+                                label="City"
+                                placeholder="City"
+                                required
+                                data={Object.values(City).map(city => { return { value: city, label: city }; })}
+                                value={city}
+                                onChange={(city: string) => setCity(city as City)}
+                                error={error}
+                            />
+                            <Space h="xl" />
+                            <Button
+                                fullWidth
+                                onClick={HandleUpload}
+                                leftIcon={<Edit />}
+                            >
                                 Publish
-                        </Button>
+                            </Button>
+                        </Container>
+                        <Container size="xs" className="d-flex flex-column align-items-center" style={{ marginTop: 100 }}>
+                            <Title order={4}>Article Image</Title>
+                            {
+                                images.length > 0 &&
+                                <Carousel w={300} slideGap="md" withIndicators loop>
+                                    {
+                                        images.map((image, index) => (
+                                            <Carousel.Slide key={index}>
+                                                <Image
+                                                    radius='md'
+                                                    src={URL.createObjectURL(image)}
+                                                    alt={title}
+                                                    width={300}
+                                                    height={300}
+                                                />
+                                            </Carousel.Slide>
+                                        ))
+                                    }
+                                </Carousel>
+                            }
+                            <Space h="xs" />
+                            <FileButton onChange={setImages} accept="image/png,image/jpeg" multiple>
+                                {(props) => <Button {...props}>Upload image</Button>}
+                            </FileButton>
+                        </Container>
                     </Container>
-                    <Container size="xs" className="d-flex flex-column align-items-center" style={{ marginTop: 100 }}>
-                        <Title order={4}>Article Image</Title>
-                        <Image src={isImagePicked ? imgBuffer : 'https://catchit.fra1.digitaloceanspaces.com/assets/no_image.png'} height={250} width={250} radius="xl" />
-                        <Space h="xs" />
-                        <Button leftIcon={<Edit />} onClick={() => { document.getElementById('file')?.click(); }}> Upload image </Button>
-                        <input
-                            type="file"
-                            id="file"
-                            onChange={(e) => {
-                                if (e.target.files)
-                                {
-                                    setImage(e.target.files[0]);
-                                    setImgBuffer(URL.createObjectURL(e.target.files[0]));
-                                    setIsImagePicked(true);
-                                }
-                            }}
-                            hidden
-                            accept="image/*"
-                        />
-                    </Container>
+                    <Dialog
+                        opened={modalMessage !== ''}
+                        onClose={() => {
+                            setError(false);
+                            setModalMessage('');
+                        }}
+                        withBorder
+                        withCloseButton
+                    >
+                        {modalMessage}
+                    </Dialog>
                 </Container>
-                <Dialog
-                    opened={error}
-                    onClose={() => setError(false)}
-                    withBorder
-                    withCloseButton
-                >
-                        Please fill all the fields with the correct values.
-                </Dialog>
-            </Container>
-        </Layout>
+            }
+        </Layout >
     );
 }
