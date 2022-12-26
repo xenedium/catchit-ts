@@ -1,6 +1,4 @@
-/* eslint-disable no-unused-vars */
 import { Layout } from '../Components/Others/Layout';
-import { useNavigate } from 'react-router-dom';
 import { createStyles, Container, Title, TextInput, Image, Space, Button, Textarea, Select, Dialog, FileButton, LoadingOverlay } from '@mantine/core';
 import { Edit } from 'tabler-icons-react';
 import { useEditArticle } from '../Hooks/useEditArticle';
@@ -117,13 +115,15 @@ export default function EditArticle() {
                         </Container>
                         <Container size="xs" className="d-flex flex-column align-items-center" style={{ marginTop: 100 }}>
                             <Title order={4}>Article Image</Title>
-                            <Carousel slideSize="100%" height={'100%'} w='100%' slideGap="md" loop withIndicators>
+                            <Carousel w={300} slideGap="md" withIndicators loop>
                                 {
                                     images.length > 0 ?
                                         images.map((image, index) => (
                                             <Carousel.Slide key={index}>
                                                 <Image
                                                     radius='md'
+                                                    width={300}
+                                                    height={300}
                                                     src={URL.createObjectURL(image)}
                                                     alt={article.title}
                                                 />

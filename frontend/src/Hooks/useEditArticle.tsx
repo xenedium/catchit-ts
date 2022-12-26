@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
 import { ArticleDto, ServerJsonResponse, HttpStatusCode, CategoryDto } from '../@types';
 import { useParams, useNavigate } from 'react-router-dom';
