@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-vars */
 import type { Request, Response } from 'express';
-import type { ServerJsonResponse } from '../../@types';
 import { InternalServerErrorHelper, NotFoundHelper, ArticleHelper } from '../../@types/Helpers';
-import { HttpStatusCode } from '../../@types/HttpStatusCode';
+import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
 import { Article } from '../../Models';
 
 export const GetOne = async (req: Request, res: Response) => {

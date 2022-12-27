@@ -1,7 +1,6 @@
 import { ArticleDto } from '../';
 import { IArticle, ICategory, IUser } from '../../Models/Interfaces';
-import { CategoryHelper } from './CategoryHelper';
-import { UserHelper } from './UserHelper';
+import { UserHelper, CategoryHelper } from '.';
 
 export function ArticleHelper (article: IArticle): ArticleDto {
     return {

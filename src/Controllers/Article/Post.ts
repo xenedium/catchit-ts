@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 import { Article } from '../../Models';
 import { BadRequestHelper, InternalServerErrorHelper, S3LocationHelper, ArticleHelper } from '../../@types/Helpers';
-import { HttpStatusCode, ServerJsonResponse } from '../../@types';
+import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
 
 export const Create = async (req: Request, res: Response) => {
     const { title, description, category, condition, price, quantity, city } = req.body;

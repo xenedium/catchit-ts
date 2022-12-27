@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { HttpStatusCode, ServerJsonResponse } from '../../@types';
+import { HttpStatusCode, type ServerJsonResponse } from '../../@types';
 import { BadRequestHelper, InternalServerErrorHelper, ArticleHelper, S3LocationHelper, NotFoundHelper } from '../../@types/Helpers';
 import { Article } from '../../Models';
 

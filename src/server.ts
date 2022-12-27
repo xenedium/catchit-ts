@@ -50,4 +50,5 @@ app.use('/api/*', (_, res) => res.status(HttpStatusCode.NOT_FOUND).json(NotFound
 app.get('*', (_, res) => res.status(HttpStatusCode.NOT_FOUND).sendFile(join(buildPath, 'index.html')));
 
 // Connect to MongoDB and start the server
-connect(process.env.MONGO_URI).then(() => app.listen(process.env.PORT || 3000));
+// eslint-disable-next-line no-console
+connect(process.env.MONGO_URI).then(() => app.listen(process.env.PORT || 3000, () => console.log(`Server started on http://localhost:${process.env.PORT || 3000}`)));

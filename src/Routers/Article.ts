@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { ArticleControllers } from '../Controllers';
-import { UserAuthMiddleware } from '../Middlewares/UserAuthMiddleware';
-import { UploadMiddleware } from '../Middlewares';
+import { UploadMiddleware, UserAuthMiddleware } from '../Middlewares';
 
 const articleRouter = Router();
 

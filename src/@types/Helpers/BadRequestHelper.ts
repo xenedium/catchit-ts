@@ -1,5 +1,4 @@
-import { HttpStatusCode } from '../HttpStatusCode';
-import type { ServerJsonResponse } from '../ServerJsonResponse';
+import { HttpStatusCode, type ServerJsonResponse } from '..';
 
 export function BadRequestHelper({err, message}: {err?: any, message?: string}): ServerJsonResponse {
     return {

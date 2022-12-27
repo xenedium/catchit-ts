@@ -1,4 +1,4 @@
-import { ServerJsonResponse } from '../ServerJsonResponse';
+import { ServerJsonResponse } from '..';
 
 export function NotFoundHelper(message?: string, errors?: string[]): ServerJsonResponse {
     return {

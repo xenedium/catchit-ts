@@ -1,7 +1,6 @@
 import { City } from '../../@types';
 import { Types } from 'mongoose';
-import { ICategory } from './ICategory';
-import { IUser } from './IUser';
+import { ICategory, IUser } from '.';
 
 export interface IArticle {
     _id: Types.ObjectId;

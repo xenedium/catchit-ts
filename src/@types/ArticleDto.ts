@@ -1,7 +1,5 @@
 import type { Types } from 'mongoose';
-import { CategoryDto } from './CategoryDto';
-import { City } from './City';
-import { UserDto } from './UserDto';
+import { CategoryDto, UserDto, City } from '.';
 
 export type ArticleDto = {
     _id: Types.ObjectId;
